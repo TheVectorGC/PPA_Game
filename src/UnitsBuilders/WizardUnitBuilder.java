@@ -8,7 +8,7 @@ public class WizardUnitBuilder implements UnitBuilder {
     private final Wizard wizard;
     public WizardUnitBuilder(boolean isEnemy) {
         wizard = new Wizard();
-        wizard.setIsEnemy(isEnemy);
+        wizard.setEnemy(isEnemy);
         if (isEnemy) wizard.setName("КОЛДУН-ВРАГ");
         else wizard.setName("КОЛДУН");
     }

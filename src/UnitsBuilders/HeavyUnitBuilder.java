@@ -8,7 +8,7 @@ public class HeavyUnitBuilder implements UnitBuilder {
     private final Heavy heavy;
     public HeavyUnitBuilder(boolean isEnemy) {
         heavy = new Heavy();
-        heavy.setIsEnemy(isEnemy);
+        heavy.setEnemy(isEnemy);
         if (isEnemy) heavy.setName("ХЭВИК-ВРАГ");
         else heavy.setName("ХЭВИК");
     }

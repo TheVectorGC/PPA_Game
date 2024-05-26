@@ -20,9 +20,9 @@ public class GameBoard {
         return instance;
     }
 
-    public void addUnit(Unit unit, boolean isEnemy) {
-        if (isEnemy) enemyUnits.add(unit);
-        else yourUnits.add(unit);
+    public void addUnit(Unit unit, boolean isEnemy, int position) {
+        if (isEnemy) enemyUnits.add(enemyUnits.size() - position, unit);
+        else yourUnits.add(yourUnits.size() - position, unit);
     }
     public void setUnit(int position, Unit unit, boolean isEnemy) {
         if (isEnemy) {
@@ -51,19 +51,19 @@ public class GameBoard {
     }
 
     public void setSquadPositions(boolean isEnemy) {
-        for (int i = 1; i < (isEnemy ? enemyUnits.size() : yourUnits.size()) + 1; i++) {
+        for (int i = 1; i < (isEnemy ? Math.min(enemyUnits.size(), 4) : Math.min(yourUnits.size(), 4)) + 1; i++) {
             if (isEnemy) enemyUnits.get(enemyUnits.size() - i).setPosition(i);
             else yourUnits.get(enemyUnits.size() - i).setPosition(i);
         }
     }
 
-    public void buryTheDead(boolean isEnemy) {
-        if (isEnemy) {
-            enemyUnits.remove(enemyUnits.size() - 1);
+    public void buryTheDead(Unit unit) {
+        if (unit.isEnemy()) {
+            enemyUnits.remove(enemyUnits.size() - unit.getPosition());
             setSquadPositions(true);
         }
         else {
-            yourUnits.remove(enemyUnits.size() - 1);
+            yourUnits.remove(enemyUnits.size() - unit.getPosition());
             setSquadPositions(false);
         }
     }

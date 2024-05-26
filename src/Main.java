@@ -29,17 +29,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        AbstractUnitFactory meleeFactory = new MeleeUnitFactory();
-        Unit unit = meleeFactory.createUnit(true);
-        Unit unit2 = unit.clone();
-        unit2.act();
-        UnitBuilder meleeBuilder = new MeleeUnitBuilder(false);
-        meleeBuilder.setHealthPoints(20);
-        meleeBuilder.setDefence(0);
-        meleeBuilder.setEvasion(30);
-        meleeBuilder.setCriticalChance(20);
-        Unit unit3 = meleeBuilder.build();
-        unit3.act();
         launch(args);
     }
 }

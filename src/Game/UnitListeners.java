@@ -1,9 +1,11 @@
 package Game;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import Units.Unit;
+import Game.GameLogger;
 
 public class UnitListeners {
+    private static final StringBuilder logBuilder = new StringBuilder();
+    private UnitListeners(){}
     public static void addListeners(Unit unit) {
         addIsEnemyListener(unit);
         addNameListener(unit);
@@ -11,90 +13,62 @@ public class UnitListeners {
         addDefenceListener(unit);
         addEvasionListener(unit);
         addCriticalChanceListener(unit);
-        addBleedDamageListener(unit);
-        addIsBleedListener(unit);
         addIsStunnedListener(unit);
         addPositionListener(unit);
-        addIsDeadListener(unit);
-        addIsCriticalListener(unit);
-        addIsEvadeListener(unit);
+        addBleedListener(unit);
     }
 
     private static void addIsEnemyListener(Unit unit) {
-        unit.isEnemyProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения isEnemy
+        unit.getIsEnemyProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logIsEnemyChange(unit, oldValue, newValue);
         });
     }
 
     private static void addNameListener(Unit unit) {
-        unit.nameProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения name
+        unit.getNameProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logNameChange(unit, oldValue, newValue);
         });
     }
 
     private static void addHealthPointsListener(Unit unit) {
-        unit.healthPointsProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения healthPoints
+        unit.getHealthPointsProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logHealthPointsChange(unit, (int)oldValue, (int)newValue);
         });
     }
 
     private static void addDefenceListener(Unit unit) {
-        unit.defenceProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения defence
+        unit.getDefenceProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logDefenceChange(unit, (int)oldValue, (int)newValue);
         });
     }
 
     private static void addEvasionListener(Unit unit) {
-        unit.evasionProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения evasion
+        unit.getEvasionProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logEvasionChange(unit, (int)oldValue, (int)newValue);
         });
     }
 
     private static void addCriticalChanceListener(Unit unit) {
-        unit.criticalChanceProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения criticalChance
-        });
-    }
-
-    private static void addBleedDamageListener(Unit unit) {
-        unit.bleedDamageProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения bleedDamage
-        });
-    }
-
-    private static void addIsBleedListener(Unit unit) {
-        unit.isBleedProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения isBleed
+        unit.getCriticalChanceProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logCriticalChanceChange(unit, (int)oldValue, (int)newValue);
         });
     }
 
     private static void addIsStunnedListener(Unit unit) {
-        unit.isStunnedProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения isStunned
+        unit.getIsStunnedProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logIsStunnedChange(unit, oldValue, newValue);
         });
     }
 
     private static void addPositionListener(Unit unit) {
-        unit.positionProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения position
+        unit.getPositionProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logPositionChange(unit, (int)oldValue, (int)newValue);
         });
     }
 
-    private static void addIsDeadListener(Unit unit) {
-        unit.isDeadProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения isDead
-        });
-    }
-
-    private static void addIsCriticalListener(Unit unit) {
-        unit.isCriticalProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения isCritical
-        });
-    }
-
-    private static void addIsEvadeListener(Unit unit) {
-        unit.isEvadeProperty().addListener((observable, oldValue, newValue) -> {
-            // Логика при изменении значения isEvade
+    private static void addBleedListener(Unit unit) {
+        unit.getBleedDurationProperty().addListener((observable, oldValue, newValue) -> {
+            GameLogger.logBleedChange(unit, (int)oldValue, (int)newValue);
         });
     }
 }

@@ -9,13 +9,13 @@ public class Range extends Unit {
     public Range() {}
     @Override
     public void act() {
-        if (bleed()) return;
-        if (isStunned) {
-            isStunned = false;
+        if (getBleedDuration() > 0) bleed();
+        if (isStunned()) {
+            setStunned(false);
             return;
         }
         try {
-            switch (position) {
+            switch (getPosition()) {
                 case 1:
                     cowardlyRetreat();
                     break;
@@ -38,46 +38,49 @@ public class Range extends Unit {
         }
     }
 
-    public void cowardlyRetreat() { // DMG 1-2 + back(2) + isStunned + this.bleed 0(0)
-        Unit enemy = instance.getUnit(1, !isEnemy);
+    public void cowardlyRetreat() { // DMG 1-2 + back(2) + isStunned
+        Unit enemy = instance.getUnit(1, !isEnemy());
+        changePosition(this, -2);
+        boolean isCritical = isCritical(getCriticalChance());
+        if (!isCritical) setStunned(true);
+        if (isEvade(enemy.getEvasion())) return;
         int baseDamage = 1;
         int maxDamage = 2;
-        boolean isCritical = isCritical(criticalChance);
-        isBleed = false;
-        setBleedDamage(0, bleedDamage.length);
-        int lastPosition = instance.getLastPosition(isEnemy);
-        if (lastPosition > 3) lastPosition = 3;
-        Unit lastFriend = instance.getUnit(lastPosition, isEnemy);
-        position = lastPosition;
-        lastFriend.position = 1;
-        instance.setUnit(lastPosition, this, isEnemy);
-        instance.setUnit(1, lastFriend, isEnemy);
-        attack(baseDamage, maxDamage, isCritical, enemy);
+        int damage = calculateDamage(baseDamage, maxDamage, enemy.getDefence(), isCritical);
+        enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 
-    public void uncertainShot() {   // DMG 3-4
-        Unit enemy = instance.getUnit(1, !isEnemy);
+    public void uncertainShot() {   // DMG 3-5
+        Unit enemy = instance.getUnit(1, !isEnemy());
+        if (isEvade(enemy.getEvasion())) return;
         int baseDamage = 3;
-        int maxDamage = 4;
-        boolean isCritical = isCritical(criticalChance);
-        attack(baseDamage, maxDamage, isCritical, enemy);
+        int maxDamage = 5;
+        boolean isCritical = isCritical(getCriticalChance());
+        int damage = calculateDamage(baseDamage, maxDamage, enemy.getDefence(), isCritical);
+        enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 
     public void piercingBullet() {  // DMG 1-2 + bleed 2(3)
-        Unit enemy = instance.getUnit(1, !isEnemy);
+        Unit enemy = instance.getUnit(1, !isEnemy());
+        if (isEvade(enemy.getEvasion())) return;
         int baseDamage = 1;
         int maxDamage = 2;
-        boolean isCritical = isCritical(criticalChance);
-        if (attack(baseDamage, maxDamage, isCritical, enemy)) return;
-        enemy.isBleed = true;
-        enemy.setBleedDamage(2, 3);
+        boolean isCritical = isCritical(getCriticalChance());
+        int damage = calculateDamage(baseDamage, maxDamage, enemy.getDefence(), isCritical);
+        int duration = 3;
+        if (isCritical) duration++;
+        enemy.setBleedDamage(2, duration);
+        enemy.setBleedDuration(duration);
+        enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 
     public void headshotToHead() {  // DMG 8-9 + criticalChance += 30%
-        Unit enemy = instance.getUnit(1, !isEnemy);
+        Unit enemy = instance.getUnit(1, !isEnemy());
+        if (isEvade(enemy.getEvasion())) return;
         int baseDamage = 8;
         int maxDamage = 9;
-        boolean isCritical = isCritical(criticalChance + 30);
-        attack(baseDamage, maxDamage, isCritical, enemy);
+        boolean isCritical = isCritical(getCriticalChance() + 30);
+        int damage = calculateDamage(baseDamage, maxDamage, enemy.getDefence(), isCritical);
+        enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 }

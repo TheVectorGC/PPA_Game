@@ -8,7 +8,7 @@ public class RangeUnitBuilder implements UnitBuilder {
     private final Range range;
     public RangeUnitBuilder(boolean isEnemy) {
         range = new Range();
-        range.setIsEnemy(isEnemy);
+        range.setEnemy(isEnemy);
         if (isEnemy) range.setName("ДАЛЬНИК-ВРАГ");
         else range.setName("ДАЛЬНИК");
     }

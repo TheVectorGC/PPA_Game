@@ -8,7 +8,7 @@ public class MeleeUnitBuilder implements UnitBuilder {
     private final Melee melee;
     public MeleeUnitBuilder(boolean isEnemy) {
         melee = new Melee();
-        melee.setIsEnemy(isEnemy);
+        melee.setEnemy(isEnemy);
         if (isEnemy) melee.setName("БЛИЖНИК-ВРАГ");
         else melee.setName("БЛИЖНИК");
     }
