@@ -1,6 +1,7 @@
 package Units;
 
 import Exceptions.UnitPositionException;
+import Game.GameLogger;
 
 public class Melee extends Unit {
     public Melee(boolean isEnemy, String name) {
@@ -8,24 +9,27 @@ public class Melee extends Unit {
     }
     public Melee() {}
     @Override
-    public void act() {
-        if (getBleedDuration() > 0) bleed();
-        if (isStunned()) {
-            setStunned(false);
-            return;
-        }
+    public void act(StringBuilder logBuilder) {
         try {
             switch (getPosition()) {
                 case 1:
+                    logBuilder.append(String.format("%s (%d): ПОДЛЫЙ УДАР (DMG 4-5 +bleed 2(3))\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     sneakyBlow();
                     break;
                 case 2:
+                    logBuilder.append(String.format("%s (%d): КОВАРНЫЙ БРОСОК (DMG 3-4 +bleed 1(3))\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     sneakyThrow();
                     break;
                 case 3:
+                    logBuilder.append(String.format("%s (%d): ЗАТОЧКА НОЖЕЙ (+CRT (10%%))\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     knifeSharpening();
                     break;
                 case 4:
+                    logBuilder.append(String.format("%s (%d): КОВЫРЯНИЕ В НОСУ (nothing)\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     nosePicking();
                     break;
                 default:
@@ -47,8 +51,7 @@ public class Melee extends Unit {
         int damage = calculateDamage(baseDamage, maxDamage, enemy.getDefence(), isCritical);
         int duration = 3;
         if (isCritical) duration++;
-        enemy.setBleedDuration(duration);
-        enemy.setBleedDamage(2, duration);
+        enemy.setBleed(2, duration);
         enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 
@@ -61,8 +64,7 @@ public class Melee extends Unit {
         int damage = calculateDamage(baseDamage, maxDamage, enemy.getDefence(), isCritical);
         int duration = 3;
         if (isCritical) duration++;
-        enemy.setBleedDuration(duration);
-        enemy.setBleedDamage(1, duration);
+        enemy.setBleed(1, duration);
         enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 

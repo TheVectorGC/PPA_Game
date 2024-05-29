@@ -1,5 +1,6 @@
 package UnitsBuilders;
 
+import Game.UnitListeners;
 import Interfaces.UnitBuilder;
 import Units.Wizard;
 import Units.Unit;
@@ -35,6 +36,7 @@ public class WizardUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
+        UnitListeners.addListeners(wizard);
         return wizard;
     }
 }

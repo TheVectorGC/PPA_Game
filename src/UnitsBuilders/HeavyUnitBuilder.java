@@ -1,5 +1,6 @@
 package UnitsBuilders;
 
+import Game.UnitListeners;
 import Interfaces.UnitBuilder;
 import Units.Heavy;
 import Units.Unit;
@@ -35,6 +36,7 @@ public class HeavyUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
+        UnitListeners.addListeners(heavy);
         return heavy;
     }
 }

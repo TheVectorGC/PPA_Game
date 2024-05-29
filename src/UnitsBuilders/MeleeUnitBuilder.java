@@ -1,5 +1,6 @@
 package UnitsBuilders;
 
+import Game.UnitListeners;
 import Interfaces.UnitBuilder;
 import Units.Melee;
 import Units.Unit;
@@ -35,6 +36,7 @@ public class MeleeUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
+        UnitListeners.addListeners(melee);
         return melee;
     }
 }

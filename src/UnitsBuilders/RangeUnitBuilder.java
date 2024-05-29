@@ -1,5 +1,6 @@
 package UnitsBuilders;
 
+import Game.UnitListeners;
 import Interfaces.UnitBuilder;
 import Units.Range;
 import Units.Unit;
@@ -35,6 +36,7 @@ public class RangeUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
+        UnitListeners.addListeners(range);
         return range;
     }
 }

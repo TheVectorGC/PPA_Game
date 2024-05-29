@@ -3,24 +3,27 @@ package Units;
 import Exceptions.UnitPositionException;
 import Game.GameBoard;
 import Game.UnitListeners;
+import Game.GameLogger;
+import java.util.ArrayList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public abstract class Unit implements Cloneable {
-    private final BooleanProperty isEnemy = new SimpleBooleanProperty();
-    private final StringProperty name = new SimpleStringProperty();
-    private final IntegerProperty healthPoints = new SimpleIntegerProperty();
-    private final IntegerProperty defence = new SimpleIntegerProperty();
-    private final IntegerProperty evasion = new SimpleIntegerProperty();
-    private final IntegerProperty criticalChance = new SimpleIntegerProperty();
-    private final BooleanProperty isStunned = new SimpleBooleanProperty(false);
-    private final IntegerProperty position = new SimpleIntegerProperty(-1);
-    private final IntegerProperty bleedDuration = new SimpleIntegerProperty(0);
-    private final int[] bleedDamage = new int[] { 0, 0, 0, 0 };
+    private BooleanProperty isEnemy = new SimpleBooleanProperty();
+    private StringProperty name = new SimpleStringProperty();
+    private IntegerProperty healthPoints = new SimpleIntegerProperty();
+    private IntegerProperty defence = new SimpleIntegerProperty();
+    private IntegerProperty evasion = new SimpleIntegerProperty();
+    private IntegerProperty criticalChance = new SimpleIntegerProperty();
+    private BooleanProperty isStunned = new SimpleBooleanProperty(false);
+    private IntegerProperty position = new SimpleIntegerProperty(-1);
+    private ObservableList<Integer> bleed = FXCollections.observableArrayList();
     protected GameBoard instance = GameBoard.getInstance();
 
     protected Unit(boolean isEnemy, String name, int healthPoints, int defence, int evasion, int criticalChance) {
@@ -38,26 +41,56 @@ public abstract class Unit implements Cloneable {
     @Override
     public Unit clone() {
         try {
-            return (Unit) super.clone();
-        }
-        catch (CloneNotSupportedException ex) {
+            Unit cloned = (Unit) super.clone();
+            cloned.isEnemy = new SimpleBooleanProperty(this.isEnemy.get());
+            cloned.name = new SimpleStringProperty(this.name.get());
+            cloned.healthPoints = new SimpleIntegerProperty(this.healthPoints.get());
+            cloned.defence = new SimpleIntegerProperty(this.defence.get());
+            cloned.evasion = new SimpleIntegerProperty(this.evasion.get());
+            cloned.criticalChance = new SimpleIntegerProperty(this.criticalChance.get());
+            cloned.isStunned = new SimpleBooleanProperty(this.isStunned.get());
+            cloned.position = new SimpleIntegerProperty(this.position.get());
+            cloned.bleed = FXCollections.observableArrayList();
+            UnitListeners.addListeners(cloned);
+            return cloned;
+        } catch (CloneNotSupportedException ex) {
             throw new AssertionError();
         }
     }
 
+    public void act() {
+        StringBuilder logBuilder = new StringBuilder().append("\n").append("-".repeat(50)).append("\n\n");
+        if (getBleed().size() > 0) {
+            logBuilder.append(String.format("%s (%d): истекает кровью\n", this.getName(), this.getPosition()));
+            GameLogger.addLogEntry(logBuilder.toString());
+            logBuilder.setLength(0);
+            bleed();
+            logBuilder.append("\n");
+        }
+        if (isStunned()) {
+            if (logBuilder.length() >= 2) {
+                logBuilder.delete(logBuilder.length() - 1, logBuilder.length());
+            }
+            GameLogger.addLogEntry(logBuilder.toString());
+            setStunned(false);
+            return;
+        }
+        act(logBuilder);
+    }
+    abstract void act(StringBuilder logBuilder);
     public int calculateDamage(int baseDamage, int maxDamage, int defence, boolean isCritical) {
         if (isCritical) {
-            baseDamage = (int)Math.ceil((double)baseDamage * 1.5);
-            maxDamage = (int)Math.ceil((double)maxDamage * 1.5);
+            baseDamage = (int)Math.round((double)baseDamage * 1.5);
+            maxDamage = (int)Math.round((double)maxDamage * 1.5);
         }
-        return (int)Math.ceil((baseDamage + Math.random() * (maxDamage - baseDamage)) * (100 - defence) / 100.0);
+        return (int)Math.round((baseDamage + Math.random() * (maxDamage - baseDamage)) * (100 - defence) / 100.0);
     }
 
     public void bleed() {
-        int duration = getBleedDuration() - 1;
-        int damage = getBleedDamage(duration);
-        setBleedDamage(0, duration);
-        setBleedDuration(duration);
+        ArrayList<Integer> currentBleed = getBleed();
+        int damage = currentBleed.get(0);
+        currentBleed.remove(0);
+        bleed.setAll(currentBleed);
         setHealthPoints(getHealthPoints() - damage);
     }
 
@@ -78,11 +111,15 @@ public abstract class Unit implements Cloneable {
     }
 
     public boolean isCritical(int criticalChance) {
-        return Math.random() * 100 < criticalChance;
+        boolean isCritical = Math.random() * 100 < criticalChance;
+        if (isCritical) GameLogger.addLogEntry("КРИТ!");
+        return isCritical;
     }
 
     public boolean isEvade(int evasion) {
-        return Math.random() * 100 < evasion;
+        boolean isEvade = Math.random() * 100 < evasion;
+        if (isEvade)  GameLogger.addLogEntry("ЦЕЛЬ УКЛОНИЛАСЬ ОТ АТАКИ!");
+        return isEvade;
     }
 
     public boolean isEnemy() {
@@ -162,22 +199,25 @@ public abstract class Unit implements Cloneable {
         this.position.set(position);
     }
 
-    public int getBleedDuration() {
-        return bleedDuration.get();
+    public ArrayList<Integer> getBleed() {
+        return new ArrayList<>(bleed);
     }
 
-    public void setBleedDuration(int bleedDuration) {
-        this.bleedDuration.set(bleedDuration);
+    public void setBleed(ArrayList<Integer> bleed) {
+        this.bleed.setAll(bleed);
     }
-
-    public int getBleedDamage(int index) {
-        return bleedDamage[index];
-    }
-
-    public void setBleedDamage(int value, int duration) {
-        for (int i = 0; i < duration; i++) {
-            this.bleedDamage[i] = getBleedDamage(i) + value;
+    public void setBleed(int value, int duration) {
+        ArrayList<Integer> currentBleed = getBleed();
+        int size = currentBleed.size();
+        if (currentBleed.size() < duration) {
+            for (int i = 0; i < duration - size; i++) {
+                currentBleed.add(0);
+            }
         }
+        for (int i = 0; i < duration; i++) {
+            currentBleed.set(i, currentBleed.get(i) + value);
+        }
+        bleed.setAll(currentBleed);
     }
 
     public BooleanProperty getIsEnemyProperty() {
@@ -204,9 +244,7 @@ public abstract class Unit implements Cloneable {
         return criticalChance;
     }
 
-    public IntegerProperty getBleedDurationProperty() {
-        return bleedDuration;
-    }
+    public ObservableList<Integer> getBleedProperty() { return bleed; }
 
     public BooleanProperty getIsStunnedProperty() {
         return isStunned;
@@ -215,6 +253,4 @@ public abstract class Unit implements Cloneable {
     public IntegerProperty getPositionProperty() {
         return position;
     }
-
-    abstract public void act();
 }

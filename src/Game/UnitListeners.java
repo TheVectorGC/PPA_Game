@@ -1,7 +1,7 @@
 package Game;
 
 import Units.Unit;
-import Game.GameLogger;
+import javafx.collections.ListChangeListener;
 
 public class UnitListeners {
     private static final StringBuilder logBuilder = new StringBuilder();
@@ -67,8 +67,8 @@ public class UnitListeners {
     }
 
     private static void addBleedListener(Unit unit) {
-        unit.getBleedDurationProperty().addListener((observable, oldValue, newValue) -> {
-            GameLogger.logBleedChange(unit, (int)oldValue, (int)newValue);
+        unit.getBleedProperty().addListener((ListChangeListener<Integer>) change -> {
+            GameLogger.logBleedChange(unit);
         });
     }
 }

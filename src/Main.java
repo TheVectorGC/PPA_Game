@@ -1,8 +1,12 @@
+import Game.GameBoard;
 import Interfaces.AbstractUnitFactory;
 import Interfaces.UnitBuilder;
 import Units.Unit;
 import UnitsBuilders.MeleeUnitBuilder;
+import UnitsFactories.HeavyUnitFactory;
 import UnitsFactories.MeleeUnitFactory;
+import UnitsFactories.RangeUnitFactory;
+import UnitsFactories.WizardUnitFactory;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -11,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    private static final GameBoard instance = GameBoard.getInstance();
 
     @Override
     public void start(Stage primaryStage) {
@@ -29,6 +34,24 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        startGame();
         launch(args);
+    }
+
+    private static void startGame() {
+        AbstractUnitFactory meleeFactory = new MeleeUnitFactory();
+        AbstractUnitFactory rangeFactory = new RangeUnitFactory();
+        AbstractUnitFactory heavyFactory = new HeavyUnitFactory();
+        AbstractUnitFactory wizardFactory = new WizardUnitFactory();
+        Unit melee = meleeFactory.createUnit(false);
+        Unit range = rangeFactory.createUnit(false);
+        Unit heavy = heavyFactory.createUnit(false);
+        Unit wizard = wizardFactory.createUnit(false);
+        Unit meleeEnemy = meleeFactory.createUnit(true);
+        Unit rangeEnemy = rangeFactory.createUnit(true);
+        Unit heavyEnemy = heavyFactory.createUnit(true);
+        Unit wizardEnemy = wizardFactory.createUnit(true);
+
+        instance.game();
     }
 }

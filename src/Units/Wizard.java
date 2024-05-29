@@ -1,6 +1,9 @@
 package Units;
 
 import Exceptions.UnitPositionException;
+import Game.GameLogger;
+
+import java.util.ArrayList;
 
 public class Wizard extends Unit {
     public Wizard(boolean isEnemy, String name) {
@@ -8,24 +11,27 @@ public class Wizard extends Unit {
     }
     public Wizard() {}
     @Override
-    public void act() {
-        if (getBleedDuration() > 0) bleed();
-        if (isStunned()) {
-            setStunned(false);
-            return;
-        }
+    public void act(StringBuilder logBuilder) {
         try {
             switch (getPosition()) {
                 case 1:
+                    logBuilder.append(String.format("%s (%d): БОНЬК (DMG 1-2 +stun (75%%))\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     bonk();
                     break;
                 case 2:
+                    logBuilder.append(String.format("%s (%d): ОГНЕННЫЙ ФАЕРБОЛ (DMG 0-15 || DMG 999999999 (10%%))\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     fireFireball();
                     break;
                 case 3:
+                    logBuilder.append(String.format("%s (%d): ЧАРОДЕЙСКИЙ ТЕЛЕПОРТ (ENEMY POS1: back(random))\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     arcaneTeleport();
                     break;
                 case 4:
+                    logBuilder.append(String.format("%s (%d): КОЛДУНСКОЕ ЛЕЧЕНИЕ (FRIEND POS1: +0-7 HP +bleed = false)\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     witcherTreatment();
                     break;
                 default:
@@ -65,16 +71,16 @@ public class Wizard extends Unit {
     public void arcaneTeleport() {  // ENEMY POS1: BACK(RANDOM)
         Unit enemy = instance.getUnit(1, !isEnemy());
         if (isCritical(getCriticalChance())) {
-            instance.addUnit(enemy, !isEnemy(), 1);
+            instance.addUnit(enemy, !enemy.isEnemy(), 1);
             instance.buryTheDead(enemy);
-            enemy.setEnemy(isEnemy());
+            enemy.setEnemy(!enemy.isEnemy());
         }
         double random = Math.random() * 100;
         if (random <= 33) enemy.changePosition(enemy, -1);
         else if (random <= 66) enemy.changePosition(enemy, -2);
         else if (random <= 99) enemy.changePosition(enemy, -3);
         else {
-            setEvasion(99); // lucky :)
+            setEvasion(70); // lucky :)
         }
     }
 
@@ -84,9 +90,7 @@ public class Wizard extends Unit {
         boolean isCritical = isCritical(getCriticalChance());
         if (isCritical) maxHeal = (int)Math.ceil((double)maxHeal * 1.5);
         int heal = (int)Math.ceil(Math.random() * maxHeal);
-        int duration = friend.getBleedDuration();
-        friend.setBleedDamage(0, duration);
-        friend.setBleedDuration(0);
+        friend.setBleed(new ArrayList<>(0));
         friend.setHealthPoints(friend.getHealthPoints() + heal);
     }
 }

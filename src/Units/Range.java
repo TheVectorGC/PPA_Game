@@ -1,6 +1,7 @@
 package Units;
 
 import Exceptions.UnitPositionException;
+import Game.GameLogger;
 
 public class Range extends Unit {
     public Range(boolean isEnemy, String name) {
@@ -8,24 +9,27 @@ public class Range extends Unit {
     }
     public Range() {}
     @Override
-    public void act() {
-        if (getBleedDuration() > 0) bleed();
-        if (isStunned()) {
-            setStunned(false);
-            return;
-        }
+    public void act(StringBuilder logBuilder) {
         try {
             switch (getPosition()) {
                 case 1:
+                    logBuilder.append(String.format("%s (%d): ТРУСЛИВОЕ ОТСТУПЛЕНИЕ (DMG 1-2, back(2), isStunned)\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     cowardlyRetreat();
                     break;
                 case 2:
+                    logBuilder.append(String.format("%s (%d): НЕУВЕРЕННЫЙ ВЫСТРЕЛ (DMG 3-5)\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     uncertainShot();
                     break;
                 case 3:
+                    logBuilder.append(String.format("%s (%d): ПРОНЗАЮЩАЯ ПУЛЯ (DMG 1-2 +bleed 3(2))\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     piercingBullet();
                     break;
                 case 4:
+                    logBuilder.append(String.format("%s (%d): ХЕДШОТ В ГОЛОВУ (CRT (+30%%) DMG 8-9)\n", this.getName(), this.getPosition()));
+                    GameLogger.addLogEntry(logBuilder.toString());
                     headshotToHead();
                     break;
                 default:
@@ -60,17 +64,16 @@ public class Range extends Unit {
         enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 
-    public void piercingBullet() {  // DMG 1-2 + bleed 2(3)
+    public void piercingBullet() {  // DMG 1-2 + bleed 3(2)
         Unit enemy = instance.getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         int baseDamage = 1;
         int maxDamage = 2;
         boolean isCritical = isCritical(getCriticalChance());
         int damage = calculateDamage(baseDamage, maxDamage, enemy.getDefence(), isCritical);
-        int duration = 3;
+        int duration = 2;
         if (isCritical) duration++;
-        enemy.setBleedDamage(2, duration);
-        enemy.setBleedDuration(duration);
+        enemy.setBleed(3, duration);
         enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 
