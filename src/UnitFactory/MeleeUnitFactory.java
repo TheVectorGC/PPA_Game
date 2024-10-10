@@ -1,8 +1,7 @@
-package UnitsFactories;
+package UnitFactory;
 
-import Interfaces.AbstractUnitFactory;
-import Units.Melee;
-import Units.Unit;
+import Unit.Melee;
+import Unit.Unit;
 
 public class MeleeUnitFactory implements AbstractUnitFactory {
     @Override

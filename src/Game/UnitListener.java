@@ -1,11 +1,11 @@
 package Game;
 
-import Units.Unit;
+import Unit.Unit;
 import javafx.collections.ListChangeListener;
 
-public class UnitListeners {
+public class UnitListener {
     private static final StringBuilder logBuilder = new StringBuilder();
-    private UnitListeners(){}
+    private UnitListener(){}
     public static void addListeners(Unit unit) {
         addIsEnemyListener(unit);
         addNameListener(unit);
@@ -20,7 +20,7 @@ public class UnitListeners {
 
     private static void addIsEnemyListener(Unit unit) {
         unit.getIsEnemyProperty().addListener((observable, oldValue, newValue) -> {
-            GameLogger.logIsEnemyChange(unit, oldValue, newValue);
+            GameLogger.logIsEnemyChange(unit, newValue);
         });
     }
 

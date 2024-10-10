@@ -1,7 +1,6 @@
-package Interfaces;
+package UnitBuilder;
 
-import Units.Unit;
-import java.util.ArrayList;
+import Unit.Unit;
 
 public interface UnitBuilder {
     void setHealthPoints(int healthPoints);

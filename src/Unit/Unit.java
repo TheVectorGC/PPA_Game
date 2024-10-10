@@ -1,8 +1,8 @@
-package Units;
+package Unit;
 
-import Exceptions.UnitPositionException;
+import Exception.UnitPositionException;
 import Game.GameBoard;
-import Game.UnitListeners;
+import Game.UnitListener;
 import Game.GameLogger;
 import java.util.ArrayList;
 import javafx.beans.property.BooleanProperty;
@@ -24,16 +24,18 @@ public abstract class Unit implements Cloneable {
     private BooleanProperty isStunned = new SimpleBooleanProperty(false);
     private IntegerProperty position = new SimpleIntegerProperty(-1);
     private ObservableList<Integer> bleed = FXCollections.observableArrayList();
+    private UnitType unitType;
     protected GameBoard instance = GameBoard.getInstance();
 
-    protected Unit(boolean isEnemy, String name, int healthPoints, int defence, int evasion, int criticalChance) {
+    protected Unit(UnitType unitType, boolean isEnemy, String name, int healthPoints, int defence, int evasion, int criticalChance) {
+        this.unitType = unitType;
         this.isEnemy.set(isEnemy);
         this.name.set(name);
         this.healthPoints.set(healthPoints);
         this.defence.set(defence);
         this.evasion.set(evasion);
         this.criticalChance.set(criticalChance);
-        UnitListeners.addListeners(this);
+        UnitListener.addListeners(this);
     }
 
     protected Unit() {}
@@ -42,6 +44,7 @@ public abstract class Unit implements Cloneable {
     public Unit clone() {
         try {
             Unit cloned = (Unit) super.clone();
+            cloned.unitType = this.unitType;
             cloned.isEnemy = new SimpleBooleanProperty(this.isEnemy.get());
             cloned.name = new SimpleStringProperty(this.name.get());
             cloned.healthPoints = new SimpleIntegerProperty(this.healthPoints.get());
@@ -51,7 +54,7 @@ public abstract class Unit implements Cloneable {
             cloned.isStunned = new SimpleBooleanProperty(this.isStunned.get());
             cloned.position = new SimpleIntegerProperty(this.position.get());
             cloned.bleed = FXCollections.observableArrayList();
-            UnitListeners.addListeners(cloned);
+            UnitListener.addListeners(cloned);
             return cloned;
         } catch (CloneNotSupportedException ex) {
             throw new AssertionError();
@@ -77,7 +80,7 @@ public abstract class Unit implements Cloneable {
         }
         act(logBuilder);
     }
-    abstract void act(StringBuilder logBuilder);
+    abstract public void act(StringBuilder logBuilder);
     public int calculateDamage(int baseDamage, int maxDamage, int defence, boolean isCritical) {
         if (isCritical) {
             baseDamage = (int)Math.round((double)baseDamage * 1.5);
@@ -187,14 +190,8 @@ public abstract class Unit implements Cloneable {
     }
 
     public void setPosition(int position) {
-        try {
-            if (!(position == 1 || position == 2 || position == 3 || position == 4)) {
-                throw new UnitPositionException("Invalid position value in setPosition");
-            }
-        }
-        catch (UnitPositionException ex) {
-            ex.printStackTrace();
-            System.exit(-1);
+        if (!(position == 1 || position == 2 || position == 3 || position == 4)) {
+            throw new UnitPositionException("Invalid position value in setPosition");
         }
         this.position.set(position);
     }
@@ -219,6 +216,9 @@ public abstract class Unit implements Cloneable {
         }
         bleed.setAll(currentBleed);
     }
+
+    public void setUnitType(UnitType unitType) { this.unitType = unitType; }
+    public UnitType getUnitType() { return unitType; }
 
     public BooleanProperty getIsEnemyProperty() {
         return isEnemy;

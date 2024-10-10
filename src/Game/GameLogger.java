@@ -1,6 +1,6 @@
 package Game;
 
-import Units.Unit;
+import Unit.Unit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,10 +15,10 @@ public class GameLogger {
 
     public static void addLogEntry(String entry) {
         logEntry.add(entry);
-        System.out.println(entry); // Для консольного вывода
+        System.out.println(entry);
     }
 
-    public static void logIsEnemyChange(Unit unit, boolean oldValue, boolean newValue) {
+    public static void logIsEnemyChange(Unit unit, boolean newValue) {
         if (newValue) {
             addLogEntry(String.format("%s (%d) теперь сражается на стороне врага", unit.getName(), unit.getPosition()));
         }

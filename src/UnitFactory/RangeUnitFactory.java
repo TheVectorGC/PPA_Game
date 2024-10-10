@@ -1,8 +1,7 @@
-package UnitsFactories;
+package UnitFactory;
 
-import Interfaces.AbstractUnitFactory;
-import Units.Range;
-import Units.Unit;
+import Unit.Range;
+import Unit.Unit;
 
 public class RangeUnitFactory implements AbstractUnitFactory {
     @Override

@@ -1,15 +1,16 @@
-package UnitsBuilders;
+package UnitBuilder;
 
-import Game.UnitListeners;
-import Interfaces.UnitBuilder;
-import Units.Range;
-import Units.Unit;
+import Game.UnitListener;
+import Unit.Range;
+import Unit.Unit;
+import Unit.UnitType;
 
 public class RangeUnitBuilder implements UnitBuilder {
     private final Range range;
     public RangeUnitBuilder(boolean isEnemy) {
         range = new Range();
         range.setEnemy(isEnemy);
+        range.setUnitType(UnitType.UNIT_RANGE);
         if (isEnemy) range.setName("ДАЛЬНИК-ВРАГ");
         else range.setName("ДАЛЬНИК");
     }
@@ -36,7 +37,7 @@ public class RangeUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
-        UnitListeners.addListeners(range);
+        UnitListener.addListeners(range);
         return range;
     }
 }

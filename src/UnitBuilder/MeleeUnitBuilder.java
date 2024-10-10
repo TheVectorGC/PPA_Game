@@ -1,15 +1,16 @@
-package UnitsBuilders;
+package UnitBuilder;
 
-import Game.UnitListeners;
-import Interfaces.UnitBuilder;
-import Units.Melee;
-import Units.Unit;
+import Game.UnitListener;
+import Unit.Melee;
+import Unit.Unit;
+import Unit.UnitType;
 
 public class MeleeUnitBuilder implements UnitBuilder {
     private final Melee melee;
     public MeleeUnitBuilder(boolean isEnemy) {
         melee = new Melee();
         melee.setEnemy(isEnemy);
+        melee.setUnitType(UnitType.UNIT_MELEE);
         if (isEnemy) melee.setName("БЛИЖНИК-ВРАГ");
         else melee.setName("БЛИЖНИК");
     }
@@ -36,7 +37,7 @@ public class MeleeUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
-        UnitListeners.addListeners(melee);
+        UnitListener.addListeners(melee);
         return melee;
     }
 }

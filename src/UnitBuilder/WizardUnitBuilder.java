@@ -1,15 +1,16 @@
-package UnitsBuilders;
+package UnitBuilder;
 
-import Game.UnitListeners;
-import Interfaces.UnitBuilder;
-import Units.Wizard;
-import Units.Unit;
+import Game.UnitListener;
+import Unit.UnitType;
+import Unit.Wizard;
+import Unit.Unit;
 
 public class WizardUnitBuilder implements UnitBuilder {
     private final Wizard wizard;
     public WizardUnitBuilder(boolean isEnemy) {
         wizard = new Wizard();
         wizard.setEnemy(isEnemy);
+        wizard.setUnitType(UnitType.UNIT_WIZARD);
         if (isEnemy) wizard.setName("КОЛДУН-ВРАГ");
         else wizard.setName("КОЛДУН");
     }
@@ -36,7 +37,7 @@ public class WizardUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
-        UnitListeners.addListeners(wizard);
+        UnitListener.addListeners(wizard);
         return wizard;
     }
 }

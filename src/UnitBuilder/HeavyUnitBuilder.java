@@ -1,15 +1,16 @@
-package UnitsBuilders;
+package UnitBuilder;
 
-import Game.UnitListeners;
-import Interfaces.UnitBuilder;
-import Units.Heavy;
-import Units.Unit;
+import Game.UnitListener;
+import Unit.Heavy;
+import Unit.Unit;
+import Unit.UnitType;
 
 public class HeavyUnitBuilder implements UnitBuilder {
     private final Heavy heavy;
     public HeavyUnitBuilder(boolean isEnemy) {
         heavy = new Heavy();
         heavy.setEnemy(isEnemy);
+        heavy.setUnitType(UnitType.UNIT_HEAVY);
         if (isEnemy) heavy.setName("ХЭВИК-ВРАГ");
         else heavy.setName("ХЭВИК");
     }
@@ -36,7 +37,7 @@ public class HeavyUnitBuilder implements UnitBuilder {
 
     @Override
     public Unit build() {
-        UnitListeners.addListeners(heavy);
+        UnitListener.addListeners(heavy);
         return heavy;
     }
 }

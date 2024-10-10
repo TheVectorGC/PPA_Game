@@ -1,8 +1,7 @@
-package UnitsFactories;
+package UnitFactory;
 
-import Interfaces.AbstractUnitFactory;
-import Units.Heavy;
-import Units.Unit;
+import Unit.Heavy;
+import Unit.Unit;
 
 public class HeavyUnitFactory implements AbstractUnitFactory {
     @Override

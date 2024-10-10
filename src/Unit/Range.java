@@ -1,44 +1,38 @@
-package Units;
+package Unit;
 
-import Exceptions.UnitPositionException;
+import Exception.UnitPositionException;
 import Game.GameLogger;
 
 public class Range extends Unit {
     public Range(boolean isEnemy, String name) {
-        super(isEnemy, name, 10, 0, 0, 20);
+        super(UnitType.UNIT_RANGE, isEnemy, name, 10, 0, 0, 20);
     }
     public Range() {}
     @Override
     public void act(StringBuilder logBuilder) {
-        try {
-            switch (getPosition()) {
-                case 1:
-                    logBuilder.append(String.format("%s (%d): ТРУСЛИВОЕ ОТСТУПЛЕНИЕ (DMG 1-2, back(2), isStunned)\n", this.getName(), this.getPosition()));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    cowardlyRetreat();
-                    break;
-                case 2:
-                    logBuilder.append(String.format("%s (%d): НЕУВЕРЕННЫЙ ВЫСТРЕЛ (DMG 3-5)\n", this.getName(), this.getPosition()));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    uncertainShot();
-                    break;
-                case 3:
-                    logBuilder.append(String.format("%s (%d): ПРОНЗАЮЩАЯ ПУЛЯ (DMG 1-2 +bleed 3(2))\n", this.getName(), this.getPosition()));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    piercingBullet();
-                    break;
-                case 4:
-                    logBuilder.append(String.format("%s (%d): ХЕДШОТ В ГОЛОВУ (CRT (+30%%) DMG 8-9)\n", this.getName(), this.getPosition()));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    headshotToHead();
-                    break;
-                default:
-                    throw new UnitPositionException("Unit is not in one of the four positions");
-            }
-        }
-        catch (UnitPositionException ex) {
-            ex.printStackTrace();
-            System.exit(-1);
+        switch (getPosition()) {
+            case 1:
+                logBuilder.append(String.format("%s (%d): ТРУСЛИВОЕ ОТСТУПЛЕНИЕ (DMG 1-2, back(2), isStunned)\n", this.getName(), this.getPosition()));
+                GameLogger.addLogEntry(logBuilder.toString());
+                cowardlyRetreat();
+                break;
+            case 2:
+                logBuilder.append(String.format("%s (%d): НЕУВЕРЕННЫЙ ВЫСТРЕЛ (DMG 3-5)\n", this.getName(), this.getPosition()));
+                GameLogger.addLogEntry(logBuilder.toString());
+                uncertainShot();
+                break;
+            case 3:
+                logBuilder.append(String.format("%s (%d): ПРОНЗАЮЩАЯ ПУЛЯ (DMG 1-2 +bleed 3(2))\n", this.getName(), this.getPosition()));
+                GameLogger.addLogEntry(logBuilder.toString());
+                piercingBullet();
+                break;
+            case 4:
+                logBuilder.append(String.format("%s (%d): ХЕДШОТ В ГОЛОВУ (CRT (+30%%) DMG 8-9)\n", this.getName(), this.getPosition()));
+                GameLogger.addLogEntry(logBuilder.toString());
+                headshotToHead();
+                break;
+            default:
+                throw new UnitPositionException("Unit is not in one of the four positions");
         }
     }
 

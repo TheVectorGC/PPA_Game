@@ -1,11 +1,11 @@
-package Units;
+package Unit;
 
-import Exceptions.UnitPositionException;
+import Exception.UnitPositionException;
 import Game.GameLogger;
 
 public class Heavy extends Unit {
     public Heavy(boolean isEnemy, String name) {
-        super(isEnemy, name, 30, 20, 0, 20);
+        super(UnitType.UNIT_HEAVY, isEnemy, name, 30, 20, 0, 20);
     }
 
     public Heavy() {
@@ -15,34 +15,29 @@ public class Heavy extends Unit {
 
     @Override
     public void act(StringBuilder logBuilder) {
-        try {
-            switch (getPosition()) {
-                case 1:
-                    logBuilder.append(String.format("%s (%d): УБИВАААТЬ (DMG %d-%d +stun (40%%))\n", this.getName(), this.getPosition(), 4 + plusDamage, 6 + plusDamage));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    kiiiiilllll();
-                    break;
-                case 2:
-                    logBuilder.append(String.format("%s (%d): УЧЕБНИК ПО СТРЕЛЬБЕ (+DMG (1) +CRT (5%%))\n", this.getName(), this.getPosition()));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    shootingTutorial();
-                    break;
-                case 3:
-                    logBuilder.append(String.format("%s (%d): ДОПИНГ (-1 HP +defence (5%%, max 70%%))\n", this.getName(), this.getPosition()));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    doping();
-                    break;
-                case 4:
-                    logBuilder.append(String.format("%s (%d): НАБОР МАССЫ (+HP (5))\n", this.getName(), this.getPosition()));
-                    GameLogger.addLogEntry(logBuilder.toString());
-                    weightGain();
-                    break;
-                default:
-                    throw new UnitPositionException("Unit is not in one of the four positions");
-            }
-        } catch (UnitPositionException ex) {
-            ex.printStackTrace();
-            System.exit(-1);
+        switch (getPosition()) {
+            case 1:
+                logBuilder.append(String.format("%s (%d): УБИВАААТЬ (DMG %d-%d +stun (40%%))\n", this.getName(), this.getPosition(), 4 + plusDamage, 6 + plusDamage));
+                GameLogger.addLogEntry(logBuilder.toString());
+                kiiiiilllll();
+                break;
+            case 2:
+                logBuilder.append(String.format("%s (%d): УЧЕБНИК ПО СТРЕЛЬБЕ (+DMG (1) +CRT (5%%))\n", this.getName(), this.getPosition()));
+                GameLogger.addLogEntry(logBuilder.toString());
+                shootingTutorial();
+                break;
+            case 3:
+                logBuilder.append(String.format("%s (%d): ДОПИНГ (-1 HP +defence (5%%, max 70%%))\n", this.getName(), this.getPosition()));
+                GameLogger.addLogEntry(logBuilder.toString());
+                doping();
+                break;
+            case 4:
+                logBuilder.append(String.format("%s (%d): НАБОР МАССЫ (+HP (5))\n", this.getName(), this.getPosition()));
+                GameLogger.addLogEntry(logBuilder.toString());
+                weightGain();
+                break;
+            default:
+                throw new UnitPositionException("Unit is not in one of the four positions");
         }
     }
 

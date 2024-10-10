@@ -1,12 +1,13 @@
 package Game;
-import Units.Unit;
+import Unit.Unit;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameBoard {
     private static GameBoard instance;
-    private final ArrayList<Unit> yourUnits;
-    private final ArrayList<Unit> enemyUnits;
+    private final List<Unit> yourUnits;
+    private final List<Unit> enemyUnits;
 
     private GameBoard() {
         yourUnits = new ArrayList<>();

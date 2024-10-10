@@ -1,8 +1,7 @@
-package UnitsFactories;
+package UnitFactory;
 
-import Interfaces.AbstractUnitFactory;
-import Units.Unit;
-import Units.Wizard;
+import Unit.Unit;
+import Unit.Wizard;
 
 public class WizardUnitFactory implements AbstractUnitFactory {
     @Override
