@@ -1,4 +1,8 @@
 package Game;
+import Game.Strategy.AutoTurnStrategy;
+import Game.Strategy.GameTurnStrategy;
+import Game.Strategy.InstantResultStrategy;
+import Game.Strategy.ManualTurnStrategy;
 import Unit.Unit;
 
 import java.util.ArrayList;
@@ -8,6 +12,12 @@ public class GameBoard {
     private static GameBoard instance;
     private final List<Unit> yourUnits;
     private final List<Unit> enemyUnits;
+
+    private int yourUnitIndex = 0;
+    private int enemyUnitIndex = 0;
+    private boolean isYourUnitTurn = true;
+
+    private int turnCounter = 0;
 
     private GameBoard() {
         yourUnits = new ArrayList<>();
@@ -21,20 +31,37 @@ public class GameBoard {
         return instance;
     }
 
-    public void game() {
+    public void performSingleTurn() {
+        turnCounter++;
+        if (isYourUnitTurn) {
+            yourUnits.get(yourUnitIndex).act();
+        }
+        else {
+            enemyUnits.get(enemyUnitIndex).act();
+        }
+
+        incrementUnitIndex(isYourUnitTurn);
+        isYourUnitTurn = !isYourUnitTurn;
+    }
+
+    private void incrementUnitIndex(boolean isYourTurn) {
+        if (isYourTurn) { yourUnitIndex++; }
+        else { enemyUnitIndex++; }
+
+        if (yourUnitIndex >= yourUnits.size() || yourUnitIndex >= 4) {
+            yourUnitIndex = 0;
+        }
+        if (enemyUnitIndex >= enemyUnits.size() || enemyUnitIndex >= 4) {
+            enemyUnitIndex = 0;
+        }
+    }
+      public void game() {
         instance.setSquadPositions(true);
         instance.setSquadPositions(false);
-        while (true) {
-            for (int i = 0; i < 4; i++) {
-                if (yourUnits.size() > i) {
-                    yourUnits.get(i).act();
-                }
-                if (enemyUnits.size() > i) {
-                    enemyUnits.get(i).act();
-                }
-
-            }
-        }
+        GameTurnStrategy gameTurnStrategy = new ManualTurnStrategy();
+      //  GameTurnStrategy gameTurnStrategy = new InstantResultStrategy();
+      //  GameTurnStrategy gameTurnStrategy = new AutoTurnStrategy();
+        gameTurnStrategy.execute();
     }
 
     public void addUnit(Unit unit) {
@@ -73,7 +100,8 @@ public class GameBoard {
             yourUnits.remove(unit.getPosition() - 1);
             setSquadPositions(false);
         }
-        if (enemyUnits.size() == 0 || yourUnits.size() == 0) {
+        if (yourUnits.isEmpty() || enemyUnits.isEmpty()) {
+            System.out.println("\n\nИГРА ЗАВЕРШЕНА\nКОЛИЧЕСТВО ХОДОВ: " + turnCounter);
             System.exit(0);
         }
     }

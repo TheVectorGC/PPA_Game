@@ -5,7 +5,7 @@ import Game.GameLogger;
 
 public class Heavy extends Unit {
     public Heavy(boolean isEnemy, String name) {
-        super(UnitType.UNIT_HEAVY, isEnemy, name, 30, 20, 0, 20);
+        super(UnitType.UNIT_HEAVY, isEnemy, name, 25, 25, 0, 20);
     }
 
     public Heavy() {
@@ -22,17 +22,17 @@ public class Heavy extends Unit {
                 kiiiiilllll();
                 break;
             case 2:
-                logBuilder.append(String.format("%s (%d): УЧЕБНИК ПО СТРЕЛЬБЕ (+DMG (1) +CRT (5%%))\n", this.getName(), this.getPosition()));
+                logBuilder.append(String.format("%s (%d): УЧЕБНИК ПО СТРЕЛЬБЕ (+DMG (1) +CRT (3%%))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 shootingTutorial();
                 break;
             case 3:
-                logBuilder.append(String.format("%s (%d): ДОПИНГ (-1 HP +defence (5%%, max 70%%))\n", this.getName(), this.getPosition()));
+                logBuilder.append(String.format("%s (%d): ДОПИНГ (-1 HP +defence (3%%, max 70%%))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 doping();
                 break;
             case 4:
-                logBuilder.append(String.format("%s (%d): НАБОР МАССЫ (+HP (5))\n", this.getName(), this.getPosition()));
+                logBuilder.append(String.format("%s (%d): НАБОР МАССЫ (+HP (3))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 weightGain();
                 break;
@@ -53,30 +53,29 @@ public class Heavy extends Unit {
         enemy.setHealthPoints(enemy.getHealthPoints() - damage);
     }
 
-    public void shootingTutorial() {    // + plusDamage(1) + criticalChance += 5% (ever)
+    public void shootingTutorial() {    // + plusDamage(1) + criticalChance += 3% (ever)
         int criticalChance = getCriticalChance();
         if (isCritical(criticalChance)) {
-            GameLogger.addLogEntry(String.format("%s (%d) дополнительный урон увеличен: 2\nдополнительный урон %d -> %d)\n", this.getName(), this.getPosition(), this.plusDamage, this.plusDamage + 2));
-            plusDamage += 2;
+            setCriticalChance(criticalChance + 3);
         }
         else {
-            GameLogger.addLogEntry(String.format("%s (%d) дополнительный урон увеличен: 1\nдополнительный урон %d -> %d)\n", this.getName(), this.getPosition(), this.plusDamage, this.plusDamage + 1));
-            plusDamage += 1;
+            setCriticalChance(criticalChance + 5);
         }
-        setCriticalChance(criticalChance + 5);
+        GameLogger.addLogEntry(String.format("%s (%d) дополнительный урон увеличен: 1\nдополнительный урон %d -> %d)\n", this.getName(), this.getPosition(), this.plusDamage, this.plusDamage + 1));
+        plusDamage += 1;
     }
 
-    public void doping() {  //  -1 HP + defence += 5% (max 70%)
+    public void doping() {  //  -1 HP + defence += 3% (max 70%)
         if (isCritical(getCriticalChance())) {
-            setDefence(getDefence() + 7);
+            setDefence(getDefence() + 5);
         }
         else {
-        setHealthPoints(getHealthPoints() - 1);
-        setDefence(getDefence() + 5);
+            setHealthPoints(getHealthPoints() - 1);
+            setDefence(getDefence() + 3);
         }
     }
-    public void weightGain() {  // HP += 5;
-        if (isCritical(getCriticalChance())) setHealthPoints(getHealthPoints() + 8);
-        else setHealthPoints(getHealthPoints() + 5);
+    public void weightGain() {  // HP += 3;
+        if (isCritical(getCriticalChance())) setHealthPoints(getHealthPoints() + 5);
+        else setHealthPoints(getHealthPoints() + 3);
     }
 }

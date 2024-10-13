@@ -3,6 +3,7 @@ package Unit;
 import Exception.UnitPositionException;
 import Game.GameLogger;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Wizard extends Unit {
@@ -65,16 +66,25 @@ public class Wizard extends Unit {
     public void arcaneTeleport() {  // ENEMY POS1: BACK(RANDOM)
         Unit enemy = instance.getUnit(1, !isEnemy());
         if (isCritical(getCriticalChance())) {
+            enemy.setName(enemy.getName() + "-ПРЕДАТЕЛЬ");
             instance.addUnit(enemy, !enemy.isEnemy(), 1);
             instance.buryTheDead(enemy);
             enemy.setEnemy(!enemy.isEnemy());
         }
-        double random = Math.random() * 100;
-        if (random <= 33) enemy.changePosition(enemy, -1);
-        else if (random <= 66) enemy.changePosition(enemy, -2);
-        else if (random <= 99) enemy.changePosition(enemy, -3);
         else {
-            setEvasion(70); // lucky :)
+            double random = Math.random() * 100;
+            if (random <= 33) {
+                enemy.changePosition(enemy, -1);
+            }
+            else if (random <= 66) {
+                enemy.changePosition(enemy, -2);
+            }
+            else if (random <= 99) {
+                enemy.changePosition(enemy, -3);
+            }
+            else {
+                setEvasion(70); // lucky :)
+            }
         }
     }
 
