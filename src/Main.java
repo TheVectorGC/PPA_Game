@@ -6,6 +6,7 @@ import Unit.UnitType;
 import Unit.Unit;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -76,7 +77,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-      //  launch(args);
+        launch(args);
         startGame();
     }
 
@@ -97,9 +98,6 @@ public class Main extends Application {
 
         UnitInitializerFacade.initializeUnits(unitList, true);
         UnitInitializerFacade.initializeUnits(unitList, false);
-
-
-
 
         GAME_BOARD.game();
     }

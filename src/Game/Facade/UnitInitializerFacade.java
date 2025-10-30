@@ -28,24 +28,35 @@ public class UnitInitializerFacade {
             UnitType unitType = unitTypeIterator.next();
 
             switch (unitType) {
-                case UNIT_MELEE:
-                    if (!isEnemy) { GAME_BOARD.addUnit(melee.clone()); }
-                    else { GAME_BOARD.addUnit(meleeEnemy.clone()); }
-                    break;
-                case UNIT_RANGE:
-                    if (!isEnemy) { GAME_BOARD.addUnit(range.clone()); }
-                    else { GAME_BOARD.addUnit(rangeEnemy.clone()); }
-                    break;
-                case UNIT_HEAVY:
-                    if (!isEnemy) { GAME_BOARD.addUnit(heavy.clone()); }
-                    else { GAME_BOARD.addUnit(heavyEnemy.clone()); }
-                    break;
-                case UNIT_WIZARD:
-                    if (!isEnemy) { GAME_BOARD.addUnit(wizard.clone()); }
-                    else { GAME_BOARD.addUnit(wizardEnemy.clone()); }
-                    break;
-                default:
-                    throw new UnitTypeNotSupportedException("Invalid unit type");
+                case UNIT_MELEE -> {
+                    if (!isEnemy) {
+                        GAME_BOARD.addUnit(melee.clone());
+                    } else {
+                        GAME_BOARD.addUnit(meleeEnemy.clone());
+                    }
+                }
+                case UNIT_RANGE -> {
+                    if (!isEnemy) {
+                        GAME_BOARD.addUnit(range.clone());
+                    } else {
+                        GAME_BOARD.addUnit(rangeEnemy.clone());
+                    }
+                }
+                case UNIT_HEAVY -> {
+                    if (!isEnemy) {
+                        GAME_BOARD.addUnit(heavy.clone());
+                    } else {
+                        GAME_BOARD.addUnit(heavyEnemy.clone());
+                    }
+                }
+                case UNIT_WIZARD -> {
+                    if (!isEnemy) {
+                        GAME_BOARD.addUnit(wizard.clone());
+                    } else {
+                        GAME_BOARD.addUnit(wizardEnemy.clone());
+                    }
+                }
+                default -> throw new UnitTypeNotSupportedException("Invalid unit type");
             }
         }
     }
