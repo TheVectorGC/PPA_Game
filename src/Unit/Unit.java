@@ -1,10 +1,13 @@
 package Unit;
 
+import Config.GameConstants;
 import Exception.UnitPositionException;
 import Game.GameBoard;
 import Game.UnitListener;
 import Game.GameLogger;
 import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
@@ -24,6 +27,7 @@ public abstract class Unit implements Cloneable {
     private BooleanProperty isStunned = new SimpleBooleanProperty(false);
     private IntegerProperty position = new SimpleIntegerProperty(-1);
     private ObservableList<Integer> bleed = FXCollections.observableArrayList();
+
     protected GameBoard instance = GameBoard.getInstance();
 
     protected Unit(boolean isEnemy, String name, int healthPoints, int defence, int evasion, int criticalChance) {
@@ -77,11 +81,10 @@ public abstract class Unit implements Cloneable {
 
     abstract public void performAction();
     abstract public UnitType getUnitType();
-    abstract public int getCost();
     public int calculateDamage(int baseDamage, int maxDamage, int defence, boolean isCritical) {
         if (isCritical) {
-            baseDamage = (int)Math.round((double)baseDamage * 1.5);
-            maxDamage = (int)Math.round((double)maxDamage * 1.5);
+            baseDamage = (int)Math.round((double)baseDamage * GameConstants.CRIT_MULTIPLIER);
+            maxDamage = (int)Math.round((double)maxDamage * GameConstants.CRIT_MULTIPLIER);
         }
         return (int)Math.round((baseDamage + Math.random() * (maxDamage - baseDamage)) * (100 - defence) / 100.0);
     }
@@ -104,10 +107,9 @@ public abstract class Unit implements Cloneable {
         else {
             newPosition = Math.max(oldPosition - change, 1);
         }
-        boolean isEnemy = unit.isEnemy();
-        instance.addUnit(unit, isEnemy, newPosition);
+        instance.addUnit(unit, newPosition);
         instance.buryTheDead(unit);
-        instance.setSquadPositions(isEnemy);
+        instance.setSquadPositions(unit.isEnemy());
     }
 
     public boolean isCritical(int criticalChance) {
@@ -152,7 +154,7 @@ public abstract class Unit implements Cloneable {
     }
 
     public void setDefence(int defence) {
-        if (defence > 70) defence = 70;
+        if (defence > GameConstants.MAX_DEFENCE) defence = GameConstants.MAX_DEFENCE;
         this.defence.set(defence);
     }
 
@@ -161,7 +163,7 @@ public abstract class Unit implements Cloneable {
     }
 
     public void setEvasion(int evasion) {
-        if (evasion > 70) evasion = 70;
+        if (evasion > GameConstants.MAX_EVASION) evasion = GameConstants.MAX_EVASION;
         this.evasion.set(evasion);
     }
 
@@ -170,7 +172,7 @@ public abstract class Unit implements Cloneable {
     }
 
     public void setCriticalChance(int criticalChance) {
-        if (criticalChance > 100) criticalChance = 100;
+        if (criticalChance > GameConstants.MAX_CRITICAL_CHANCE) criticalChance = GameConstants.MAX_CRITICAL_CHANCE;
         this.criticalChance.set(criticalChance);
     }
 
@@ -197,7 +199,7 @@ public abstract class Unit implements Cloneable {
         return new ArrayList<>(bleed);
     }
 
-    public void setBleed(ArrayList<Integer> bleed) {
+    public void setBleed(List<Integer> bleed) {
         this.bleed.setAll(bleed);
     }
     public void setBleed(int value, int duration) {

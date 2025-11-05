@@ -1,6 +1,7 @@
 package Unit.Adapter;
 
 import Unit.Unit;
+
 public class OldUnitAdapter extends Unit {
     private final OldUnit oldUnit;
 
@@ -9,8 +10,8 @@ public class OldUnitAdapter extends Unit {
     }
 
     @Override
-    public void performAction(StringBuilder logBuilder) {
+    public void performAction() {
         oldUnit.attackOld();
-        logBuilder.append("Старый юнит атакует через адаптер.\n");
+        System.out.println(("Старый юнит атакует через адаптер.\n"));;
     }
 }

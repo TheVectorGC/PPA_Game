@@ -9,7 +9,7 @@ public class AutoTurnStrategy implements GameTurnStrategy {
     @Override
     public void execute() {
         while (true) {
-            gameBoard.performSingleTurn();
+            gameBoard.executeTurnWithSave();
             try {
                 Thread.sleep(1000);  // Пауза в 2 секунды между ходами
             } catch (InterruptedException e) {

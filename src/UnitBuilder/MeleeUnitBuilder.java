@@ -3,16 +3,25 @@ package UnitBuilder;
 import Game.UnitListener;
 import Unit.Melee;
 import Unit.Unit;
-import Unit.UnitType;
+
+import java.util.List;
 
 public class MeleeUnitBuilder implements UnitBuilder {
     private final Melee melee;
-    public MeleeUnitBuilder(boolean isEnemy) {
+    public MeleeUnitBuilder() {
         melee = new Melee();
+    }
+
+    @Override
+    public UnitBuilder setIsEnemy(boolean isEnemy) {
         melee.setEnemy(isEnemy);
-        melee.setUnitType(UnitType.UNIT_MELEE);
-        if (isEnemy) melee.setName("БЛИЖНИК-ВРАГ");
-        else melee.setName("БЛИЖНИК");
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setName(String name) {
+        melee.setName(name);
+        return this;
     }
 
     @Override
@@ -36,6 +45,24 @@ public class MeleeUnitBuilder implements UnitBuilder {
     @Override
     public UnitBuilder setCriticalChance(int criticalChance) {
         melee.setCriticalChance(criticalChance);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setIsStunned(boolean isStunned) {
+        melee.setStunned(isStunned);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setPosition(int position) {
+        melee.setPosition(position);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setBleed(List<Integer> bleed) {
+        melee.setBleed(bleed);
         return this;
     }
 

@@ -82,7 +82,7 @@ public class GameLogger {
         addLogEntry(logBuilder.toString());
     }
 
-    public static void logIsStunnedChange(Unit unit, boolean oldValue, boolean newValue) {
+    public static void logIsStunnedChange(Unit unit, boolean newValue) {
         StringBuilder logBuilder = new StringBuilder();
         if (!newValue) {
             logBuilder.append(String.format("%s (%d) пропускает ход\n", unit.getName(), unit.getPosition()));

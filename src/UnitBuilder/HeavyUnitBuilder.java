@@ -3,16 +3,25 @@ package UnitBuilder;
 import Game.UnitListener;
 import Unit.Heavy;
 import Unit.Unit;
-import Unit.UnitType;
+
+import java.util.List;
 
 public class HeavyUnitBuilder implements UnitBuilder {
     private final Heavy heavy;
-    public HeavyUnitBuilder(boolean isEnemy) {
+    public HeavyUnitBuilder() {
         heavy = new Heavy();
+    }
+
+    @Override
+    public UnitBuilder setIsEnemy(boolean isEnemy) {
         heavy.setEnemy(isEnemy);
-        heavy.setUnitType(UnitType.UNIT_HEAVY);
-        if (isEnemy) heavy.setName("ХЭВИК-ВРАГ");
-        else heavy.setName("ХЭВИК");
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setName(String name) {
+        heavy.setName(name);
+        return this;
     }
 
     @Override
@@ -36,6 +45,24 @@ public class HeavyUnitBuilder implements UnitBuilder {
     @Override
     public UnitBuilder setCriticalChance(int criticalChance) {
         heavy.setCriticalChance(criticalChance);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setIsStunned(boolean isStunned) {
+        heavy.setStunned(isStunned);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setPosition(int position) {
+        heavy.setPosition(position);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setBleed(List<Integer> bleed) {
+        heavy.setBleed(bleed);
         return this;
     }
 

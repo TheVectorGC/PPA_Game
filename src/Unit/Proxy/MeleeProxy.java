@@ -6,24 +6,22 @@ import Unit.Unit;
 public class MeleeProxy extends Unit {
     private Melee melee;
     private final boolean isEnemy;
-    private final String name;
     private boolean isInitialized = false;
 
-    public MeleeProxy(boolean isEnemy, String name) {
+    public MeleeProxy(boolean isEnemy) {
         this.isEnemy = isEnemy;
-        this.name = name;
     }
 
     private void initialize() {
         if (!isInitialized) {
-            melee = new Melee(isEnemy, name);
+            melee = new Melee(isEnemy);
             isInitialized = true;
         }
     }
 
     @Override
-    public void performAction(StringBuilder logBuilder) {
+    public void performAction() {
         initialize();
-        melee.performAction(logBuilder);
+        melee.performAction();
     }
 }

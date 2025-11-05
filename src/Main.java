@@ -16,7 +16,6 @@ public class Main extends Application {
     private static final GameBoard GAME_BOARD = GameBoard.getInstance();
     private static final UnitPool UNIT_POOL = UnitPool.getInstance();
 
-
     @Override
     public void start(Stage primaryStage) {
         // Основные размеры экрана

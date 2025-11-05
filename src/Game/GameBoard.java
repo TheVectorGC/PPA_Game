@@ -1,4 +1,8 @@
 package Game;
+
+import Game.Memento.GameHistory;
+import Game.Memento.GameStateMemento;
+import Game.SaveLoad.SaveLoadManager;
 import Game.Strategy.GameTurnStrategy;
 import Game.Strategy.ManualTurnStrategy;
 import Unit.Unit;
@@ -8,14 +12,14 @@ import java.util.List;
 
 public class GameBoard {
     private static GameBoard instance;
-    private final List<Unit> yourUnits;
-    private final List<Unit> enemyUnits;
+    private List<Unit> yourUnits;
+    private List<Unit> enemyUnits;
 
     private int yourUnitIndex = 0;
     private int enemyUnitIndex = 0;
     private boolean isYourUnitTurn = true;
-
     private int turnCounter = 0;
+    private final GameHistory gameHistory = new GameHistory();
 
     private GameBoard() {
         yourUnits = new ArrayList<>();
@@ -29,7 +33,14 @@ public class GameBoard {
         return instance;
     }
 
-    public void performSingleTurn() {
+    public void executeTurnWithSave() {
+        gameHistory.clearRedo();
+        saveCurrentState();
+
+        executeTurn();
+    }
+
+    public void executeTurn() {
         turnCounter++;
         if (isYourUnitTurn) {
             yourUnits.get(yourUnitIndex).performAction();
@@ -42,20 +53,63 @@ public class GameBoard {
         isYourUnitTurn = !isYourUnitTurn;
     }
 
-    private void incrementUnitIndex(boolean isYourTurn) {
-        if (isYourTurn) { yourUnitIndex++; }
-        else { enemyUnitIndex++; }
-
-        if (yourUnitIndex >= yourUnits.size() || yourUnitIndex >= 4) {
-            yourUnitIndex = 0;
-        }
-        if (enemyUnitIndex >= enemyUnits.size() || enemyUnitIndex >= 4) {
-            enemyUnitIndex = 0;
+    public void undo() {
+        if (gameHistory.canUndo()) {
+            GameStateMemento memento = gameHistory.undo();
+            if (memento != null) {
+                restoreState(memento);
+                GameLogger.addLogEntry("← ОТМЕНА ХОДА →");
+            }
         }
     }
+
+    public void redo() {
+        if (gameHistory.canRedo()) {
+            GameStateMemento memento = gameHistory.redo();
+            if (memento != null) {
+                restoreState(memento);
+                GameLogger.addLogEntry("→ ПОВТОР ХОДА →");
+            }
+        }
+    }
+
+    public void saveGame() {
+        SaveLoadManager.saveGame();
+    }
+
+    public void loadGame(String saveName) {
+        SaveLoadManager.loadGame(saveName);
+    }
+
+    public static List<String> getAvailableSaves() {
+        return SaveLoadManager.getAvailableSaves();
+    }
+
+    public static void deleteSave(String saveName) {
+        SaveLoadManager.deleteSave(saveName);
+    }
+
+    private void saveCurrentState() {
+        GameStateMemento memento = new GameStateMemento(
+                yourUnits, enemyUnits, yourUnitIndex, enemyUnitIndex, isYourUnitTurn, turnCounter
+        );
+        gameHistory.saveState(memento);
+    }
+
+    private void restoreState(GameStateMemento memento) {
+        yourUnits = memento.yourUnits();
+        enemyUnits = memento.enemyUnits();
+
+        yourUnitIndex = memento.yourUnitIndex();
+        enemyUnitIndex = memento.enemyUnitIndex();
+        isYourUnitTurn = memento.isYourUnitTurn();
+        turnCounter = memento.turnCounter();
+    }
+
       public void game() {
         instance.setSquadPositions(true);
         instance.setSquadPositions(false);
+        saveCurrentState();
         GameTurnStrategy gameTurnStrategy = new ManualTurnStrategy();
       //  GameTurnStrategy gameTurnStrategy = new InstantResultStrategy();
       //  GameTurnStrategy gameTurnStrategy = new AutoTurnStrategy();
@@ -67,8 +121,8 @@ public class GameBoard {
         else yourUnits.add(unit);
     }
 
-    public void addUnit(Unit unit, boolean isEnemy, int position) {
-        if (isEnemy) enemyUnits.add(position - 1, unit);
+    public void addUnit(Unit unit, int position) {
+        if (unit.isEnemy()) enemyUnits.add(position - 1, unit);
         else yourUnits.add(position - 1, unit);
     }
 
@@ -89,6 +143,18 @@ public class GameBoard {
         }
     }
 
+    private void incrementUnitIndex(boolean isYourTurn) {
+        if (isYourTurn) { yourUnitIndex++; }
+        else { enemyUnitIndex++; }
+
+        if (yourUnitIndex >= yourUnits.size() || yourUnitIndex >= 4) {
+            yourUnitIndex = 0;
+        }
+        if (enemyUnitIndex >= enemyUnits.size() || enemyUnitIndex >= 4) {
+            enemyUnitIndex = 0;
+        }
+    }
+
     public void buryTheDead(Unit unit) {
         if (unit.isEnemy()) {
             enemyUnits.remove(unit.getPosition() - 1);
@@ -102,5 +168,53 @@ public class GameBoard {
             System.out.println("\n\nИГРА ЗАВЕРШЕНА\nКОЛИЧЕСТВО ХОДОВ: " + turnCounter);
             System.exit(0);
         }
+    }
+
+    public List<Unit> getYourUnits() {
+        return yourUnits;
+    }
+
+    public void setYourUnits(List<Unit> yourUnits) {
+        this.yourUnits = yourUnits;
+    }
+
+    public List<Unit> getEnemyUnits() {
+        return enemyUnits;
+    }
+
+    public void setEnemyUnits(List<Unit> enemyUnits) {
+        this.enemyUnits = enemyUnits;
+    }
+
+    public int getYourUnitIndex() {
+        return yourUnitIndex;
+    }
+
+    public void setYourUnitIndex(int yourUnitIndex) {
+        this.yourUnitIndex = yourUnitIndex;
+    }
+
+    public int getEnemyUnitIndex() {
+        return enemyUnitIndex;
+    }
+
+    public void setEnemyUnitIndex(int enemyUnitIndex) {
+        this.enemyUnitIndex = enemyUnitIndex;
+    }
+
+    public boolean isYourUnitTurn() {
+        return isYourUnitTurn;
+    }
+
+    public void setYourUnitTurn(boolean isYourUnitTurn) {
+        this.isYourUnitTurn = isYourUnitTurn;
+    }
+
+    public int getTurnCounter() {
+        return turnCounter;
+    }
+
+    public void setTurnCounter(int turnCounter) {
+        this.turnCounter = turnCounter;
     }
 }
