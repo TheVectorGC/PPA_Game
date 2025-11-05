@@ -3,7 +3,6 @@ import Game.GameBoard;
 
 import ObjectPool.UnitPool;
 import Unit.UnitType;
-import Unit.Unit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,8 +95,10 @@ public class Main extends Application {
         unitList.add(UnitType.UNIT_WIZARD);
         unitList.add(UnitType.UNIT_WIZARD);
 
-        UnitInitializerFacade.initializeUnits(unitList, true);
-        UnitInitializerFacade.initializeUnits(unitList, false);
+        UnitInitializerFacade unitInitializer = new UnitInitializerFacade();
+
+        unitInitializer.initializeUnits(unitList, true);
+        unitInitializer.initializeUnits(unitList, false);
 
         GAME_BOARD.game();
     }

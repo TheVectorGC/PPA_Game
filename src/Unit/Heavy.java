@@ -4,8 +4,9 @@ import Exception.UnitPositionException;
 import Game.GameLogger;
 
 public class Heavy extends Unit {
+    private static final int COST = 100;
     public Heavy(boolean isEnemy, String name) {
-        super(UnitType.UNIT_HEAVY, isEnemy, name, 25, 25, 0, 20);
+        super(isEnemy, name, 25, 25, 0, 20);
     }
 
     public Heavy() {
@@ -14,31 +15,40 @@ public class Heavy extends Unit {
     private int plusDamage = 0;
 
     @Override
-    public void act(StringBuilder logBuilder) {
+    public void performAction(StringBuilder logBuilder) {
         switch (getPosition()) {
-            case 1:
+            case 1 -> {
                 logBuilder.append(String.format("%s (%d): УБИВАААТЬ (DMG %d-%d +stun (40%%))\n", this.getName(), this.getPosition(), 4 + plusDamage, 6 + plusDamage));
                 GameLogger.addLogEntry(logBuilder.toString());
                 kiiiiilllll();
-                break;
-            case 2:
+            }
+            case 2 -> {
                 logBuilder.append(String.format("%s (%d): УЧЕБНИК ПО СТРЕЛЬБЕ (+DMG (1) +CRT (3%%))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 shootingTutorial();
-                break;
-            case 3:
+            }
+            case 3 -> {
                 logBuilder.append(String.format("%s (%d): ДОПИНГ (-1 HP +defence (3%%, max 70%%))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 doping();
-                break;
-            case 4:
+            }
+            case 4 -> {
                 logBuilder.append(String.format("%s (%d): НАБОР МАССЫ (+HP (3))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 weightGain();
-                break;
-            default:
-                throw new UnitPositionException("Unit is not in one of the four positions");
+            }
+            default -> throw new UnitPositionException("Unit is not in one of the four positions");
         }
+    }
+
+    @Override
+    public UnitType getUnitType() {
+        return UnitType.UNIT_HEAVY;
+    }
+
+    @Override
+    public int getCost() {
+        return COST;
     }
 
     public void kiiiiilllll() { // DMG (4 + plusDamage)-(6 + plusDamage) + stun (40%)
@@ -77,5 +87,12 @@ public class Heavy extends Unit {
     public void weightGain() {  // HP += 3;
         if (isCritical(getCriticalChance())) setHealthPoints(getHealthPoints() + 5);
         else setHealthPoints(getHealthPoints() + 3);
+    }
+
+    @Override
+    public Unit clone() {
+        Heavy cloned = (Heavy) super.clone();
+        cloned.plusDamage = this.plusDamage;
+        return cloned;
     }
 }

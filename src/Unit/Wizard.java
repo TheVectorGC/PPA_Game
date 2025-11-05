@@ -7,36 +7,47 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Wizard extends Unit {
+    private static final int COST = 100;
+
     public Wizard(boolean isEnemy, String name) {
-        super(UnitType.UNIT_WIZARD, isEnemy, name, 15, 10, 10, 20);
+        super(isEnemy, name, 15, 10, 10, 20);
     }
     public Wizard() {}
     @Override
-    public void act(StringBuilder logBuilder) {
+    public void performAction(StringBuilder logBuilder) {
         switch (getPosition()) {
-            case 1:
+            case 1 -> {
                 logBuilder.append(String.format("%s (%d): БОНЬК (DMG 1-2 +stun (75%%))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 bonk();
-                break;
-            case 2:
+            }
+            case 2 -> {
                 logBuilder.append(String.format("%s (%d): ОГНЕННЫЙ ФАЕРБОЛ (DMG 0-15 || DMG 999999999 (10%%))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 fireFireball();
-                break;
-            case 3:
+            }
+            case 3 -> {
                 logBuilder.append(String.format("%s (%d): ЧАРОДЕЙСКИЙ ТЕЛЕПОРТ (ENEMY POS1: back(random))\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 arcaneTeleport();
-                break;
-            case 4:
+            }
+            case 4 -> {
                 logBuilder.append(String.format("%s (%d): КОЛДУНСКОЕ ЛЕЧЕНИЕ (FRIEND POS1: +0-7 HP +bleed = false)\n", this.getName(), this.getPosition()));
                 GameLogger.addLogEntry(logBuilder.toString());
                 witcherTreatment();
-                break;
-            default:
-                throw new UnitPositionException("Unit is not in one of the four positions");
+            }
+            default -> throw new UnitPositionException("Unit is not in one of the four positions");
         }
+    }
+
+    @Override
+    public UnitType getUnitType() {
+        return UnitType.UNIT_MELEE;
+    }
+
+    @Override
+    public int getCost() {
+        return COST;
     }
 
     public void bonk() {    // DMG 1-2 + stun 75%

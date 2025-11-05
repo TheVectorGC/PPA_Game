@@ -2,7 +2,6 @@ package Unit.Proxy;
 
 import Unit.Melee;
 import Unit.Unit;
-import Unit.UnitType;
 
 public class MeleeProxy extends Unit {
     private Melee melee;
@@ -23,8 +22,8 @@ public class MeleeProxy extends Unit {
     }
 
     @Override
-    public void act(StringBuilder logBuilder) {
+    public void performAction(StringBuilder logBuilder) {
         initialize();
-        melee.act(logBuilder);
+        melee.performAction(logBuilder);
     }
 }

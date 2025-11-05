@@ -9,7 +9,7 @@ public class MeleeDecorator {
         this.melee = melee;
     }
     public void act(StringBuilder logBuilder) {
-        melee.act(logBuilder);
+        melee.performAction(logBuilder);
         // Новая функциональность
     }
 }

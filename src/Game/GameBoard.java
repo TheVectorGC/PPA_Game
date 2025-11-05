@@ -1,7 +1,5 @@
 package Game;
-import Game.Strategy.AutoTurnStrategy;
 import Game.Strategy.GameTurnStrategy;
-import Game.Strategy.InstantResultStrategy;
 import Game.Strategy.ManualTurnStrategy;
 import Unit.Unit;
 
@@ -34,10 +32,10 @@ public class GameBoard {
     public void performSingleTurn() {
         turnCounter++;
         if (isYourUnitTurn) {
-            yourUnits.get(yourUnitIndex).act();
+            yourUnits.get(yourUnitIndex).performAction();
         }
         else {
-            enemyUnits.get(enemyUnitIndex).act();
+            enemyUnits.get(enemyUnitIndex).performAction();
         }
 
         incrementUnitIndex(isYourUnitTurn);

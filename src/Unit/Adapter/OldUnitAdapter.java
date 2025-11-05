@@ -9,7 +9,7 @@ public class OldUnitAdapter extends Unit {
     }
 
     @Override
-    public void act(StringBuilder logBuilder) {
+    public void performAction(StringBuilder logBuilder) {
         oldUnit.attackOld();
         logBuilder.append("Старый юнит атакует через адаптер.\n");
     }

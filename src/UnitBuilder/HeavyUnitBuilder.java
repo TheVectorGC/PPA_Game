@@ -16,23 +16,27 @@ public class HeavyUnitBuilder implements UnitBuilder {
     }
 
     @Override
-    public void setHealthPoints(int healthPoints) {
+    public UnitBuilder setHealthPoints(int healthPoints) {
         heavy.setHealthPoints(healthPoints);
+        return this;
     }
 
     @Override
-    public void setDefence(int defence) {
+    public UnitBuilder setDefence(int defence) {
         heavy.setDefence(defence);
+        return this;
     }
 
     @Override
-    public void setEvasion(int evasion) {
+    public UnitBuilder setEvasion(int evasion) {
         heavy.setEvasion(evasion);
+        return this;
     }
 
     @Override
-    public void setCriticalChance(int criticalChance) {
+    public UnitBuilder setCriticalChance(int criticalChance) {
         heavy.setCriticalChance(criticalChance);
+        return this;
     }
 
     @Override

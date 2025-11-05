@@ -16,23 +16,27 @@ public class MeleeUnitBuilder implements UnitBuilder {
     }
 
     @Override
-    public void setHealthPoints(int healthPoints) {
+    public UnitBuilder setHealthPoints(int healthPoints) {
         melee.setHealthPoints(healthPoints);
+        return this;
     }
 
     @Override
-    public void setDefence(int defence) {
+    public UnitBuilder setDefence(int defence) {
         melee.setDefence(defence);
+        return this;
     }
 
     @Override
-    public void setEvasion(int evasion) {
+    public UnitBuilder setEvasion(int evasion) {
         melee.setEvasion(evasion);
+        return this;
     }
 
     @Override
-    public void setCriticalChance(int criticalChance) {
+    public UnitBuilder setCriticalChance(int criticalChance) {
         melee.setCriticalChance(criticalChance);
+        return this;
     }
 
     @Override

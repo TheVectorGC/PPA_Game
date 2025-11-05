@@ -41,25 +41,27 @@ public class UnitPool {
         HeavyUnitBuilder heavyBuilder = new HeavyUnitBuilder(true);
         WizardUnitBuilder wizardBuilder = new WizardUnitBuilder(true);
 
-        meleeBuilder.setHealthPoints(20);
-        meleeBuilder.setDefence(0);
-        meleeBuilder.setEvasion(30);
-        meleeBuilder.setCriticalChance(25);
+        meleeBuilder.setHealthPoints(20)
+                .setDefence(0)
+                .setEvasion(30)
+                .setCriticalChance(25);
 
-        rangeBuilder.setHealthPoints(10);
-        rangeBuilder.setDefence(0);
-        rangeBuilder.setEvasion(0);
-        rangeBuilder.setCriticalChance(20);
 
-        heavyBuilder.setHealthPoints(25);
-        heavyBuilder.setDefence(25);
-        heavyBuilder.setEvasion(0);
-        heavyBuilder.setCriticalChance(20);
+        rangeBuilder.setHealthPoints(10)
+                .setDefence(0)
+                .setEvasion(0)
+                .setCriticalChance(20);
 
-        wizardBuilder.setHealthPoints(15);
-        wizardBuilder.setDefence(10);
-        wizardBuilder.setEvasion(10);
-        wizardBuilder.setCriticalChance(20);
+
+        heavyBuilder.setHealthPoints(25)
+                .setDefence(25)
+                .setEvasion(0)
+                .setCriticalChance(20);
+
+        wizardBuilder.setHealthPoints(15)
+                .setDefence(10)
+                .setEvasion(10)
+                .setCriticalChance(20);
 
         unitTemplates.put(UnitType.UNIT_MELEE, meleeFactory.createUnit(false));
         unitTemplates.put(UnitType.UNIT_RANGE, rangeFactory.createUnit(false));

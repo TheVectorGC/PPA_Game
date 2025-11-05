@@ -4,36 +4,43 @@ import Exception.UnitPositionException;
 import Game.GameLogger;
 
 public class Melee extends Unit {
+    private static final int COST = 100;
+
     public Melee(boolean isEnemy, String name) {
-        super(UnitType.UNIT_MELEE, isEnemy, name, 20, 0, 30, 25);
+        super(isEnemy, name, 20, 0, 30, 25);
     }
     public Melee() {}
     @Override
-    public void act(StringBuilder logBuilder) {
+    public void performAction() {
         switch (getPosition()) {
-            case 1:
-                logBuilder.append(String.format("%s (%d): ПОДЛЫЙ УДАР (DMG 4-5 +bleed 2(3))\n", this.getName(), this.getPosition()));
-                GameLogger.addLogEntry(logBuilder.toString());
+            case 1 -> {
+                GameLogger.addLogEntry(String.format("%s (%d): ПОДЛЫЙ УДАР (DMG 4-5 +bleed 2(3))\n", this.getName(), this.getPosition()));
                 sneakyBlow();
-                break;
-            case 2:
-                logBuilder.append(String.format("%s (%d): КОВАРНЫЙ БРОСОК (DMG 3-4 +bleed 1(3))\n", this.getName(), this.getPosition()));
-                GameLogger.addLogEntry(logBuilder.toString());
+            }
+            case 2 -> {
+                GameLogger.addLogEntry(String.format("%s (%d): КОВАРНЫЙ БРОСОК (DMG 3-4 +bleed 1(3))\n", this.getName(), this.getPosition()));
                 sneakyThrow();
-                break;
-            case 3:
-                logBuilder.append(String.format("%s (%d): ЗАТОЧКА НОЖЕЙ (+CRT (10%%))\n", this.getName(), this.getPosition()));
-                GameLogger.addLogEntry(logBuilder.toString());
+            }
+            case 3 -> {
+                GameLogger.addLogEntry(String.format("%s (%d): ЗАТОЧКА НОЖЕЙ (+CRT (10%%))\n", this.getName(), this.getPosition()));
                 knifeSharpening();
-                break;
-            case 4:
-                logBuilder.append(String.format("%s (%d): КОВЫРЯНИЕ В НОСУ (nothing)\n", this.getName(), this.getPosition()));
-                GameLogger.addLogEntry(logBuilder.toString());
+            }
+            case 4 -> {
+                GameLogger.addLogEntry(String.format("%s (%d): КОВЫРЯНИЕ В НОСУ (nothing)\n", this.getName(), this.getPosition()));
                 nosePicking();
-                break;
-            default:
-                throw new UnitPositionException("Unit is not in one of the four positions");
+            }
+            default -> throw new UnitPositionException("Unit is not in one of the four positions");
         }
+    }
+
+    @Override
+    public UnitType getUnitType() {
+        return UnitType.UNIT_MELEE;
+    }
+
+    @Override
+    public int getCost() {
+        return COST;
     }
 
     public void sneakyBlow() {  // DMG 4-5 + bleed 2(3)
