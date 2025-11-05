@@ -1,6 +1,7 @@
 package Game;
 
 import Unit.Unit;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,7 +15,11 @@ public class GameLogger {
     }
 
     public static void addLogEntry(String entry) {
-        logEntry.add(entry);
+        if (Platform.isFxApplicationThread()) {
+            logEntry.add(entry);
+        } else {
+            Platform.runLater(() -> logEntry.add(entry));
+        }
         System.out.println(entry);
     }
 

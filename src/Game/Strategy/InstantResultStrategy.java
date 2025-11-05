@@ -8,7 +8,7 @@ public class InstantResultStrategy implements GameTurnStrategy {
 
     @Override
     public void execute() {
-        while (true) {
+        while (!gameBoard.isGameOver() && !Thread.currentThread().isInterrupted()) {
             gameBoard.performSingleTurn();
         }
     }

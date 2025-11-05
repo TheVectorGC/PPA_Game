@@ -7,6 +7,8 @@ import Unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameBoard {
     private static GameBoard instance;
@@ -18,6 +20,9 @@ public class GameBoard {
     private boolean isYourUnitTurn = true;
 
     private int turnCounter = 0;
+
+    private boolean gameOver = false;
+    private final List<TurnListener> listeners = new CopyOnWriteArrayList<>();
 
     private GameBoard() {
         yourUnits = new ArrayList<>();
@@ -31,14 +36,33 @@ public class GameBoard {
         return instance;
     }
 
+    public interface TurnListener {
+        void onBeforeAct(Unit actingUnit, boolean isYourTurn);
+        void onAfterAct(Unit actedUnit, boolean isYourTurn);
+        void onGameOver(boolean yourWon);
+    }
+
+    public void addTurnListener(TurnListener listener) {
+        listeners.add(listener);
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
     public void performSingleTurn() {
+        if (gameOver) return;
         turnCounter++;
-        if (isYourUnitTurn) {
-            yourUnits.get(yourUnitIndex).act();
+
+        var optActiveUnit = getActiveUnit();
+        if (optActiveUnit.isEmpty()) {
+            return;
         }
-        else {
-            enemyUnits.get(enemyUnitIndex).act();
-        }
+
+        var currentUnit = optActiveUnit.get();
+        listeners.forEach(l -> l.onBeforeAct(currentUnit, isYourUnitTurn));
+        currentUnit.act();
+        listeners.forEach(l -> l.onAfterAct(currentUnit, isYourUnitTurn));
 
         incrementUnitIndex(isYourUnitTurn);
         isYourUnitTurn = !isYourUnitTurn;
@@ -74,14 +98,30 @@ public class GameBoard {
         else yourUnits.add(position - 1, unit);
     }
 
+    public Optional<Unit> getActiveUnit() {
+        final boolean validUnitIndex = isYourUnitTurn ? yourUnits.size() > yourUnitIndex : enemyUnits.size() > enemyUnitIndex;
+        if (!validUnitIndex) {
+            return Optional.empty();
+        }
+        return isYourUnitTurn ? Optional.of(yourUnits.get(yourUnitIndex)) : Optional.of(enemyUnits.get(enemyUnitIndex));
+    }
+
     public Unit getUnit(int position, boolean isEnemy) {
-        if (isEnemy) return enemyUnits.get(position - 1);
-        else return yourUnits.get(position - 1);
+        try {
+            if (isEnemy) return enemyUnits.get(position - 1);
+            else return yourUnits.get(position - 1);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     public int getLastPosition(boolean isEnemy) {
         if (isEnemy) return Math.min(enemyUnits.size(), 4);
         else return Math.min(yourUnits.size(), 4);
+    }
+
+    public int getArmySize(boolean isEnemy) {
+       return isEnemy ? enemyUnits.size() : yourUnits.size();
     }
 
     public void setSquadPositions(boolean isEnemy) {
@@ -92,17 +132,26 @@ public class GameBoard {
     }
 
     public void buryTheDead(Unit unit) {
-        if (unit.isEnemy()) {
-            enemyUnits.remove(unit.getPosition() - 1);
-            setSquadPositions(true);
-        }
-        else {
-            yourUnits.remove(unit.getPosition() - 1);
-            setSquadPositions(false);
-        }
+        if (unit == null) return;
+
+        List<Unit> list = unit.isEnemy() ? enemyUnits : yourUnits;
+        list.remove(unit);
+        setSquadPositions(unit.isEnemy());
+
         if (yourUnits.isEmpty() || enemyUnits.isEmpty()) {
-            System.out.println("\n\nИГРА ЗАВЕРШЕНА\nКОЛИЧЕСТВО ХОДОВ: " + turnCounter);
-            System.exit(0);
+            gameOver = true;
+            boolean yourWon = !yourUnits.isEmpty();
+            listeners.forEach(l -> l.onGameOver(yourWon));
         }
+    }
+
+    public void resetGameState() {
+        yourUnits.clear();
+        enemyUnits.clear();
+        turnCounter = 0;
+        yourUnitIndex = 0;
+        enemyUnitIndex = 0;
+        isYourUnitTurn = true;
+        gameOver = false;
     }
 }

@@ -253,4 +253,11 @@ public abstract class Unit implements Cloneable {
     public IntegerProperty getPositionProperty() {
         return position;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Unit unit
+                && this.isEnemy.equals(unit.isEnemy)
+                && this.position.equals(unit.position);
+    }
 }
