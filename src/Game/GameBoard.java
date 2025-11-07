@@ -1,9 +1,12 @@
 package Game;
-import Game.Strategy.AutoTurnStrategy;
+
+import Game.Memento.GameHistory;
+import Game.Memento.GameStateMemento;
+import Game.SaveLoad.SaveLoadManager;
 import Game.Strategy.GameTurnStrategy;
-import Game.Strategy.InstantResultStrategy;
 import Game.Strategy.ManualTurnStrategy;
 import Unit.Unit;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +15,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameBoard {
     private static GameBoard instance;
-    private final List<Unit> yourUnits;
-    private final List<Unit> enemyUnits;
+    private List<Unit> yourUnits;
+    private List<Unit> enemyUnits;
 
     private int yourUnitIndex = 0;
     private int enemyUnitIndex = 0;

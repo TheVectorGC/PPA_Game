@@ -2,6 +2,7 @@ package Unit.Proxy;
 
 import Unit.Melee;
 import Unit.Unit;
+import Unit.UnitType;
 
 public class MeleeProxy extends Unit {
     private Melee melee;
@@ -23,5 +24,10 @@ public class MeleeProxy extends Unit {
     public void performAction() {
         initialize();
         melee.performAction();
+    }
+
+    @Override
+    public UnitType getUnitType() {
+        return UnitType.UNIT_MELEE;
     }
 }

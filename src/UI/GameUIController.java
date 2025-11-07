@@ -53,8 +53,9 @@ public class GameUIController {
         unitList.add(UnitType.UNIT_WIZARD);
         unitList.add(UnitType.UNIT_WIZARD);
 
-        UnitInitializerFacade.initializeUnits(unitList, true);
-        UnitInitializerFacade.initializeUnits(unitList, false);
+        UnitInitializerFacade unitInitializerFacade = new UnitInitializerFacade();
+        unitInitializerFacade.initializeUnits(unitList, true);
+        unitInitializerFacade.initializeUnits(unitList, false);
 
         gameBoard.setSquadPositions(true);
         gameBoard.setSquadPositions(false);
@@ -111,7 +112,7 @@ public class GameUIController {
                 });
             }
 
-            gameBoard.performSingleTurn();
+            gameBoard.executeTurnWithSave();
 
             // после хода обновляем армию и активного юнита
             Platform.runLater(() -> {

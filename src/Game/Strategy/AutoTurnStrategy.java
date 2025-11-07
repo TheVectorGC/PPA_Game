@@ -3,7 +3,6 @@ package Game.Strategy;
 import Game.GameBoard;
 
 public class AutoTurnStrategy implements GameTurnStrategy {
-
     private volatile boolean running = false;
 
     @Override

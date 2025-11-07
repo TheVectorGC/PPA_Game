@@ -6,7 +6,10 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.*;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -58,8 +61,8 @@ public class MainFX extends Application {
 
         // Scene 
         Scene scene = new Scene(root, width, height, Color.WHITE);
-        scene.widthProperty().addListener((_, _, _) -> updateArmyUI());
-        scene.heightProperty().addListener((_, _, _) -> updateArmyUI());
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> updateArmyUI());
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> updateArmyUI());
         stage.setTitle("Battle Game");
         stage.setScene(scene);
         stage.show();
@@ -186,18 +189,18 @@ public class MainFX extends Application {
 
         // поведение
         // todo implement undo and redu operations in controller
-        btnUndo.setOnAction(_ -> {
+        btnUndo.setOnAction(e -> {
             GameLogger.addLogEntry("[Undo not implemented]"); // todo change after implement
         });
-        btnRedo.setOnAction(_ -> {
+        btnRedo.setOnAction(e -> {
             GameLogger.addLogEntry("[Redo not implemented]"); // todo change after implement
         });
-        btnNext.setOnAction(_ -> controller.performSingleTurn());
-        btnAuto.setOnAction(_ -> controller.toggleAutoPlay(
+        btnNext.setOnAction(e -> controller.performSingleTurn());
+        btnAuto.setOnAction(e -> controller.toggleAutoPlay(
                 () -> btnAuto.setText("⏹ Стоп"),
                 () -> btnAuto.setText("⏩ Авто")
         ));
-        btnResult.setOnAction(_ -> {
+        btnResult.setOnAction(e -> {
             controller.performInstantResult();
             btnAuto.setVisible(false);
         });
@@ -206,7 +209,7 @@ public class MainFX extends Application {
             updateArmyUI();
             initializeDefaultArmyBtn.setVisible(false);
         });
-        startOverBtn.setOnAction(_ -> {
+        startOverBtn.setOnAction(e -> {
             controller.startGameOver();
             initializeDefaultArmyBtn.setVisible(true);
             btnAuto.setVisible(true);
@@ -242,7 +245,7 @@ public class MainFX extends Application {
             -fx-background-radius: 8;
             -fx-cursor: hand;
             """);
-        btn.setOnMouseEntered(_ -> btn.setStyle("""
+        btn.setOnMouseEntered(e -> btn.setStyle("""
             -fx-background-color: #222;
             -fx-text-fill: white;
             -fx-font-size: 14px;
@@ -250,7 +253,7 @@ public class MainFX extends Application {
             -fx-background-radius: 8;
             -fx-cursor: hand;
             """));
-        btn.setOnMouseExited(_ -> btn.setStyle("""
+        btn.setOnMouseExited(e -> btn.setStyle("""
             -fx-background-color: #000;
             -fx-text-fill: white;
             -fx-font-size: 14px;

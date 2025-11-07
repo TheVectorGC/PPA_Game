@@ -3,7 +3,6 @@ package Game.Strategy;
 import Game.GameBoard;
 
 public class InstantResultStrategy implements GameTurnStrategy {
-
     private final GameBoard gameBoard = GameBoard.getInstance();
 
     @Override
