@@ -1,38 +1,69 @@
 package UnitBuilder;
 
 import Game.UnitListener;
-import Unit.UnitType;
 import Unit.Wizard;
 import Unit.Unit;
 
+import java.util.List;
+
 public class WizardUnitBuilder implements UnitBuilder {
     private final Wizard wizard;
-    public WizardUnitBuilder(boolean isEnemy) {
+    public WizardUnitBuilder() {
         wizard = new Wizard();
+    }
+
+    @Override
+    public UnitBuilder setIsEnemy(boolean isEnemy) {
         wizard.setEnemy(isEnemy);
-        wizard.setUnitType(UnitType.UNIT_WIZARD);
-        if (isEnemy) wizard.setName("КОЛДУН-ВРАГ");
-        else wizard.setName("КОЛДУН");
+        return this;
     }
 
     @Override
-    public void setHealthPoints(int healthPoints) {
+    public UnitBuilder setName(String name) {
+        wizard.setName(name);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setHealthPoints(int healthPoints) {
         wizard.setHealthPoints(healthPoints);
+        return this;
     }
 
     @Override
-    public void setDefence(int defence) {
+    public UnitBuilder setDefence(int defence) {
         wizard.setDefence(defence);
+        return this;
     }
 
     @Override
-    public void setEvasion(int evasion) {
+    public UnitBuilder setEvasion(int evasion) {
         wizard.setEvasion(evasion);
+        return this;
     }
 
     @Override
-    public void setCriticalChance(int criticalChance) {
+    public UnitBuilder setCriticalChance(int criticalChance) {
         wizard.setCriticalChance(criticalChance);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setIsStunned(boolean isStunned) {
+        wizard.setStunned(isStunned);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setPosition(int position) {
+        wizard.setPosition(position);
+        return this;
+    }
+
+    @Override
+    public UnitBuilder setBleed(List<Integer> bleed) {
+        wizard.setBleed(bleed);
+        return this;
     }
 
     @Override

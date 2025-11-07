@@ -8,8 +8,8 @@ public class MeleeDecorator {
     public MeleeDecorator(Melee melee) {
         this.melee = melee;
     }
-    public void act(StringBuilder logBuilder) {
-        melee.act(logBuilder);
+    public void performAction() {
+        melee.performAction();
         // Новая функциональность
     }
 }

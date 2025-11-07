@@ -9,14 +9,14 @@ public class AutoTurnStrategy implements GameTurnStrategy {
     @Override
     public void execute() {
         running = true;
-        GameBoard board = GameBoard.getInstance();
+        GameBoard gameBoard = GameBoard.getInstance();
 
-        while (running && !board.isGameOver()) {
-            board.performSingleTurn();
-
+        while (running && !gameBoard.isGameOver()) {
+            gameBoard.executeTurnWithSave();
             try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException e) {
                 break;
             }
         }
