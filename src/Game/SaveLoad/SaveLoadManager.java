@@ -27,18 +27,19 @@ public class SaveLoadManager {
         }
     }
 
-    public static void saveGame() {
+    public static void saveGame(String customName) {
         try {
-            String filename = generateNextSaveName();
-            Path filePath = Paths.get(SAVES_DIRECTORY, filename);
+            String filename = (customName == null || customName.isBlank())
+                    ? generateNextSaveName()
+                    : customName.replaceFirst("\\.save$", "");
+            Path filePath = Paths.get(SAVES_DIRECTORY, filename + ".save");
 
             try (ObjectOutputStream oos = new ObjectOutputStream(
                     new BufferedOutputStream(Files.newOutputStream(filePath)))) {
                 oos.writeObject(GameStateMapper.toGameStateDTO());
                 GameLogger.addLogEntry("Игра сохранена: " + filename);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("Ошибка при сохранении игры: " + e.getMessage());
         }
     }

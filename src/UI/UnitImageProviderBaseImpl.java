@@ -28,7 +28,7 @@ public class UnitImageProviderBaseImpl implements UnitImageProvider {
 
     @Override
     public Image getPositionImage(UnitType unitType, int position) {
-        UnitPositionException.validatePosition(position);
+        UnitPositionException.throwIfInvalidPosition(position);
 
         final String key = "pos_" + position;
         return getImage(unitType, key);

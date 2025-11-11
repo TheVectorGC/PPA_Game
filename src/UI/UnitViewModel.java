@@ -12,7 +12,7 @@ public record UnitViewModel(
         boolean isActive
 ) {
     public UnitViewModel {
-        UnitPositionException.validatePosition(position);
+        UnitPositionException.throwIfInvalidPosition(position);
     }
 
     @Override

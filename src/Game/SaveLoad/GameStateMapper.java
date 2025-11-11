@@ -46,6 +46,9 @@ public class GameStateMapper {
         gameBoard.setEnemyUnitIndex(dto.enemyUnitIndex());
         gameBoard.setYourUnitTurn(dto.isYourUnitTurn());
         gameBoard.setTurnCounter(dto.turnCounter());
+
+        gameBoard.setSquadPositions(true);
+        gameBoard.setSquadPositions(false);
     }
 
     private static UnitDTO unitToDTO(Unit unit) {
@@ -74,7 +77,7 @@ public class GameStateMapper {
             default -> throw new IllegalArgumentException("Неизвестный тип юнита: " + dto.unitType());
         }
 
-        return unitBuilder
+        unitBuilder
                 .setIsEnemy(dto.isEnemy())
                 .setName(dto.name())
                 .setHealthPoints(dto.healthPoints())
@@ -82,8 +85,12 @@ public class GameStateMapper {
                 .setEvasion(dto.evasion())
                 .setCriticalChance(dto.criticalChance())
                 .setIsStunned(dto.isStunned())
-                .setPosition(dto.position())
-                .setBleed(dto.bleed())
-                .build();
+                .setBleed(dto.bleed());
+
+        if (dto.position() < 1) {
+            return unitBuilder.build();
+        } else {
+            return unitBuilder.setPosition(dto.position()).build();
+        }
     }
 }

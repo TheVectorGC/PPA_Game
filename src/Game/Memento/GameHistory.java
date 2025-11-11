@@ -41,6 +41,10 @@ public class GameHistory {
         return !redoStack.isEmpty();
     }
 
+    public void clearUndo() {
+        undoStack.clear();
+    }
+
     public void clearRedo() {
         redoStack.clear();
     }

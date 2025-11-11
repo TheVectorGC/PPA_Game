@@ -54,9 +54,8 @@ public class GameBoard {
 
     public void executeTurnWithSave() {
         gameHistory.clearRedo();
-        saveCurrentState();
-
         executeTurn();
+        saveCurrentState();
     }
 
     public void executeTurn() {
@@ -96,8 +95,8 @@ public class GameBoard {
         }
     }
 
-    public void saveGame() {
-        SaveLoadManager.saveGame();
+    public void saveGame(String name) {
+        SaveLoadManager.saveGame(name);
     }
 
     public void loadGame(String saveName) {
@@ -112,7 +111,7 @@ public class GameBoard {
         SaveLoadManager.deleteSave(saveName);
     }
 
-    private void saveCurrentState() {
+    public void saveCurrentState() {
         GameStateMemento memento = new GameStateMemento(
                 yourUnits, enemyUnits, yourUnitIndex, enemyUnitIndex, isYourUnitTurn, turnCounter
         );
@@ -214,6 +213,8 @@ public class GameBoard {
         enemyUnitIndex = 0;
         isYourUnitTurn = true;
         gameOver = false;
+        gameHistory.clearUndo();
+        gameHistory.clearRedo();
     }
 
     public List<Unit> getYourUnits() {

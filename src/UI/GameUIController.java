@@ -59,8 +59,19 @@ public class GameUIController {
 
         gameBoard.setSquadPositions(true);
         gameBoard.setSquadPositions(false);
+        gameBoard.saveCurrentState();
 
         Platform.runLater(this::notifyArmyUpdate);
+    }
+
+    private void refreshActiveUnit() {
+        var activeOpt = gameBoard.getActiveUnit();
+        UnitViewModel newActive = activeOpt.map(dataProvider::getViewModelForPosition).orElse(null);
+        lastActiveVm = newActive;
+
+        if (onActiveUnitChanged != null) {
+            Platform.runLater(() -> onActiveUnitChanged.accept(newActive));
+        }
     }
 
     public void startGameOver() {
@@ -72,7 +83,7 @@ public class GameUIController {
         gameBoard.addTurnListener(new GameBoard.TurnListener() {
             @Override
             public void onBeforeAct(Unit actingUnit, boolean isYourTurn) {
-                UnitViewModel vm = dataProvider.getViewModel(actingUnit);
+                UnitViewModel vm = dataProvider.getViewModelForPosition(actingUnit);
                 lastActiveVm = vm;
 
                 Platform.runLater(() -> {
@@ -105,7 +116,7 @@ public class GameUIController {
             // получаем текущего активного юнита ДО хода
             var active = gameBoard.getActiveUnit();
             if (active.isPresent()) {
-                UnitViewModel vm = dataProvider.getViewModel(active.get());
+                UnitViewModel vm = dataProvider.getViewModelForPosition(active.get());
                 Platform.runLater(() -> {
                     if (onActiveUnitChanged != null) onActiveUnitChanged.accept(vm);
                     if (onArmyUpdated != null) onArmyUpdated.run();
@@ -120,6 +131,46 @@ public class GameUIController {
                 UnitViewModel newActive = dataProvider.getActiveUnit();
                 if (onActiveUnitChanged != null) onActiveUnitChanged.accept(newActive);
             });
+        });
+    }
+
+    public void undo() {
+        turnExecutor.submit(() -> {
+            gameBoard.undo();
+            Platform.runLater(() -> {
+                notifyArmyUpdate();
+                refreshActiveUnit();
+            });
+        });
+    }
+
+    public void redo() {
+        turnExecutor.submit(() -> {
+            gameBoard.redo();
+            Platform.runLater(() -> {
+                notifyArmyUpdate();
+                refreshActiveUnit();
+            });
+        });
+    }
+
+    public void saveGame(String name) {
+        turnExecutor.submit(() -> gameBoard.saveGame(name));
+    }
+
+    public void loadGame(String saveName) {
+        turnExecutor.submit(() -> {
+            try {
+                gameBoard.loadGame(saveName);
+                gameBoard.saveCurrentState();
+
+                Platform.runLater(() -> {
+                    notifyArmyUpdate();
+                    refreshActiveUnit();
+                });
+            } catch (Exception e) {
+                GameLogger.addLogEntry("Ошибка при загрузке: " + e.getMessage());
+            }
         });
     }
 

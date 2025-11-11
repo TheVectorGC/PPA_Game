@@ -65,7 +65,7 @@ public abstract class Unit implements Cloneable {
     public void act() {
         GameLogger.addLogEntry("\n" + "-".repeat(50) + "\n");
 
-        if (getBleed().size() > 0) {
+        if (!getBleed().isEmpty()) {
             GameLogger.addLogEntry(String.format("%s (%d): истекает кровью", this.getName(), this.getPosition()));
             bleed();
         }
@@ -189,9 +189,7 @@ public abstract class Unit implements Cloneable {
     }
 
     public void setPosition(int position) {
-        if (!(position == 1 || position == 2 || position == 3 || position == 4)) {
-            throw new UnitPositionException("Invalid position value in setPosition");
-        }
+        UnitPositionException.throwIfInvalidPosition(position);
         this.position.set(position);
     }
 

@@ -14,7 +14,7 @@ public class UnitPositionException extends RuntimeException {
         super(MessageFormat.format(MESSAGE_TEMPLATE, position));
     }
 
-    public static void validatePosition(int position) {
+    public static void throwIfInvalidPosition(int position) {
         if (position < 1 || position > 4) {
             throw new UnitPositionException(position);
         }

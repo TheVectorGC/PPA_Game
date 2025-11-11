@@ -14,9 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.List;
 
 public class MainFX extends Application {
@@ -37,10 +39,7 @@ public class MainFX extends Application {
         BorderPane root = new BorderPane();
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        ToolBar toolbar = new ToolBar(
-                new Button("💾 Сохранить"),
-                new Button("📂 Загрузить")
-        );
+        ToolBar toolbar = initializeToolbar(stage);
         root.setTop(toolbar);
 
         GridPane grid = createGrid();
@@ -77,6 +76,55 @@ public class MainFX extends Application {
             }
         });
         controller.setOnArmyUpdated(this::updateArmyUI);
+    }
+
+    private ToolBar initializeToolbar(Stage stage) {
+        final Button saveBtn = new Button("💾 Сохранить");
+        final Button loadBtn = new Button("📂 Загрузить");
+
+        File savesDir = new File(System.getProperty("user.dir"), "saves");
+        if (!savesDir.exists()) {
+            savesDir.mkdirs();
+        }
+
+        saveBtn.setOnAction(_ -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Сохранить игру как...");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Файлы сохранений (*.save)", "*.save")
+            );
+            chooser.setInitialDirectory(savesDir);
+
+            File file = chooser.showSaveDialog(stage);
+            if (file != null) {
+                String name = file.getName().replaceFirst("\\.save$", "");
+                controller.saveGame(name);
+            } else {
+                controller.saveGame(null);
+            }
+        });
+
+        loadBtn.setOnAction(_ -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Выберите файл сохранения");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Файлы сохранений (*.save)", "*.save")
+            );
+            chooser.setInitialDirectory(savesDir);
+
+            File file = chooser.showOpenDialog(stage);
+            if (file != null) {
+                String name = file.getName().replaceFirst("\\.save$", "");
+                controller.loadGame(name);
+            } else {
+                GameLogger.addLogEntry("Загрузка отменена");
+            }
+        });
+
+        return new ToolBar(
+                saveBtn,
+                loadBtn
+        );
     }
 
     private GridPane createGrid() {
@@ -188,13 +236,8 @@ public class MainFX extends Application {
         Button startOverBtn = styledButton("Начать заново");
 
         // поведение
-        // todo implement undo and redu operations in controller
-        btnUndo.setOnAction(e -> {
-            GameLogger.addLogEntry("[Undo not implemented]"); // todo change after implement
-        });
-        btnRedo.setOnAction(e -> {
-            GameLogger.addLogEntry("[Redo not implemented]"); // todo change after implement
-        });
+        btnUndo.setOnAction(e -> controller.undo());
+        btnRedo.setOnAction(e -> controller.redo());
         btnNext.setOnAction(e -> controller.performSingleTurn());
         btnAuto.setOnAction(e -> controller.toggleAutoPlay(
                 () -> btnAuto.setText("⏹ Стоп"),

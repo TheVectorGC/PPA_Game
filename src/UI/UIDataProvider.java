@@ -49,12 +49,12 @@ public class UIDataProvider {
         return new UnitViewModel(unitPosition, type.name(), activeUnit.getHealthPoints(), unitImage, activeUnit.isEnemy(), true);
     }
 
-    public UnitViewModel getViewModel(Unit unit) {
+    public UnitViewModel getViewModelForPosition(Unit unit) {
         return new UnitViewModel(
                 unit.getPosition(),
                 unit.getName(),
                 unit.getHealthPoints(),
-                unitImageProvider.getBaseImage(unit.getUnitType()),
+                unitImageProvider.getPositionImage(unit.getUnitType(), unit.getPosition()),
                 unit.isEnemy(),
                 unit.equals(GameBoard.getInstance().getActiveUnit().orElse(null))
         );
