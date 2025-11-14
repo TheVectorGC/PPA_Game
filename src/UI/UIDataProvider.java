@@ -15,7 +15,6 @@ public class UIDataProvider {
     private final UnitImageProvider unitImageProvider;
 
     public UIDataProvider() {
-        //this.unitImageProvider = new UnitImageProviderBaseImpl("resources/images/");
         this.unitImageProvider = new UnitImageProviderProxy("resources/images/");
     }
 

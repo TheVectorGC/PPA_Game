@@ -5,7 +5,9 @@ import Game.GameBoard;
 import Game.GameLogger;
 import Game.Strategy.AutoTurnStrategy;
 import Game.Strategy.InstantResultStrategy;
+import Unit.Adapter.AncientMeleeAdapter;
 import Unit.Unit;
+import Unit.DecoratedMelee;
 import Unit.UnitType;
 import javafx.application.Platform;
 
@@ -47,11 +49,15 @@ public class GameUIController {
         unitList.add(UnitType.UNIT_WIZARD);
         unitList.add(UnitType.UNIT_HEAVY);
         unitList.add(UnitType.UNIT_RANGE);
-        unitList.add(UnitType.UNIT_RANGE);
+        unitList.add(UnitType.UNIT_MELEE);
+        unitList.add(UnitType.UNIT_WIZARD);
 
         UnitInitializerFacade unitInitializerFacade = new UnitInitializerFacade();
         unitInitializerFacade.initializeUnits(unitList, true);
         unitInitializerFacade.initializeUnits(unitList, false);
+
+        addOldMeleeToArmy();
+        addEnhancedMeleeToArmy();
 
         gameBoard.setSquadPositions(true);
         gameBoard.setSquadPositions(false);
@@ -59,6 +65,31 @@ public class GameUIController {
 
         Platform.runLater(this::notifyArmyUpdate);
     }
+
+    private void addEnhancedMeleeToArmy() {
+        GameBoard gameBoard = GameBoard.getInstance();
+
+        DecoratedMelee decoratedMelee = new DecoratedMelee(false);
+        gameBoard.addUnit(decoratedMelee, 2);
+
+        DecoratedMelee decoratedEnemyMelee = new DecoratedMelee(true);
+        gameBoard.addUnit(decoratedEnemyMelee, 2);
+
+        GameLogger.addLogEntry("В армии добавлен УСИЛЕННЫЙ БЛИЖНИК с улучшенным броском (позиция 2)");
+    }
+
+    private void addOldMeleeToArmy() {
+        GameBoard gameBoard = GameBoard.getInstance();
+
+        AncientMeleeAdapter ancientMelee = new AncientMeleeAdapter(false);
+        gameBoard.addUnit(ancientMelee, 1);
+
+        AncientMeleeAdapter ancientEnemyMelee = new AncientMeleeAdapter(true);
+        gameBoard.addUnit(ancientEnemyMelee, 1);
+
+        GameLogger.addLogEntry("В армии добавлен ДРЕВНИЙ БЛИЖНИК из прошлой версии игры (позиция 1)");
+    }
+
 
     private void refreshActiveUnit() {
         var activeOpt = gameBoard.getActiveUnit();

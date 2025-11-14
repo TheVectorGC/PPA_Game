@@ -31,11 +31,12 @@ public class UnitImageProviderProxy implements UnitImageProvider {
             return imageCache.get(cacheKey);
         }
 
-        System.out.println("Proxy: ЗАГРУЖАЮ НОВОЕ - " + cacheKey);
+        System.out.println("Proxy: ЗАГРУЗКА С ДИСКА - " + cacheKey);
         Image image = loader.load();
 
         if (image != null) {
             imageCache.put(cacheKey, image);
+            System.out.println("Proxy: ИЗОБРАЖЕНИЕ ДОБАВЛЕНО В КЭШ - " + cacheKey);
         }
 
         return image;

@@ -165,11 +165,20 @@ public class GameBoard {
     }
 
     public Optional<Unit> getActiveUnit() {
-        final boolean validUnitIndex = isYourUnitTurn ? yourUnits.size() > yourUnitIndex : enemyUnits.size() > enemyUnitIndex;
-        if (!validUnitIndex) {
-            return Optional.empty();
+        if (isYourUnitTurn) {
+            if (yourUnitIndex >= yourUnits.size()) {
+                yourUnitIndex = 0;
+                if (yourUnits.isEmpty()) return Optional.empty();
+            }
+            return Optional.of(yourUnits.get(yourUnitIndex));
         }
-        return isYourUnitTurn ? Optional.of(yourUnits.get(yourUnitIndex)) : Optional.of(enemyUnits.get(enemyUnitIndex));
+        else {
+            if (enemyUnitIndex >= enemyUnits.size()) {
+                enemyUnitIndex = 0;
+                if (enemyUnits.isEmpty()) return Optional.empty();
+            }
+            return Optional.of(enemyUnits.get(enemyUnitIndex));
+        }
     }
 
     public Unit getUnit(int position, boolean isEnemy) {
