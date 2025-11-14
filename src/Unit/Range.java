@@ -2,6 +2,7 @@ package Unit;
 
 import Config.UnitStats.RangeStats;
 import Exception.UnitPositionException;
+import Game.GameBoard;
 import Game.GameLogger;
 
 public class Range extends Unit {
@@ -47,7 +48,7 @@ public class Range extends Unit {
     }
 
     public void cowardlyRetreat() { // DMG 1-2 + back(2) + isStunned
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         changePosition(this, -1 * RangeStats.COWARDLY_RETREAT_BACK_POSITIONS);
         boolean isCritical = isCritical(getCriticalChance());
         if (!isCritical) setStunned(true);
@@ -62,7 +63,7 @@ public class Range extends Unit {
     }
 
     public void uncertainShot() {   // DMG 3-5
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance());
         int damage = calculateDamage(
@@ -75,7 +76,7 @@ public class Range extends Unit {
     }
 
     public void piercingBullet() {  // DMG 1-2 + bleed 3(2)
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance());
         int damage = calculateDamage(
@@ -91,7 +92,7 @@ public class Range extends Unit {
     }
 
     public void headshotToHead() {  // DMG 8-9 + criticalChance += 30%
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance() + RangeStats.HEADSHOT_TO_HEAD_CRIT_BONUS);
         int damage = calculateDamage(

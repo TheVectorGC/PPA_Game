@@ -14,7 +14,6 @@ public final class HeavyStats {
     public static final int KIIIIILLLLL_BASE_DMG = 4;
     public static final int KIIIIILLLLL_MAX_DMG = 6;
     public static final int KIIIIILLLLL_STUN_CHANCE = 40;
-    public static final double KIIIIILLLLL_STUN_CRIT_MULTIPLIER = 1.5;
 
     public static final int SHOOTING_TUTORIAL_DAMAGE_BONUS = 1;
     public static final int SHOOTING_TUTORIAL_CRIT_BONUS_NORMAL = 3;

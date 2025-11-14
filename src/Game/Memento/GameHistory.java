@@ -3,6 +3,7 @@ package Game.Memento;
 import Config.GameConstants;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 
 public class GameHistory {
     private final Deque<GameStateMemento> undoStack = new ArrayDeque<>();
@@ -17,6 +18,7 @@ public class GameHistory {
         }
     }
 
+    /*
     public GameStateMemento undo() {
         if (!canUndo()) return null;
 
@@ -31,6 +33,25 @@ public class GameHistory {
         GameStateMemento state = redoStack.pop();
         undoStack.push(state);
         return state;
+    }
+
+     */
+
+    public GameStateMemento undo() {
+        if (undoStack.size() < 2) return null;
+        GameStateMemento currentState = undoStack.peek();
+        Iterator<GameStateMemento> iterator = undoStack.iterator();
+        iterator.next();
+        GameStateMemento previousState = iterator.next();
+
+        redoStack.push(currentState);
+        return previousState;
+    }
+
+    public GameStateMemento redo() {
+        if (!canRedo()) return null;
+
+        return redoStack.pop();
     }
 
     public boolean canUndo() {

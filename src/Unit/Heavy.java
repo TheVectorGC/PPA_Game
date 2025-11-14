@@ -3,6 +3,7 @@ package Unit;
 import Config.GameConstants;
 import Config.UnitStats.HeavyStats;
 import Exception.UnitPositionException;
+import Game.GameBoard;
 import Game.GameLogger;
 
 public class Heavy extends Unit {
@@ -49,7 +50,7 @@ public class Heavy extends Unit {
     }
 
     public void kiiiiilllll() { // DMG (4 + plusDamage)-(6 + plusDamage) + stun (40%)
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance());
         double random = Math.random() * 100;

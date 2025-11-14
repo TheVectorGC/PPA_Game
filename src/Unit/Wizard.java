@@ -3,6 +3,7 @@ package Unit;
 import Config.GameConstants;
 import Config.UnitStats.WizardStats;
 import Exception.UnitPositionException;
+import Game.GameBoard;
 import Game.GameLogger;
 
 public class Wizard extends Unit {
@@ -47,7 +48,7 @@ public class Wizard extends Unit {
     }
 
     public void bonk() {    // DMG 1-2 + stun 75%
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance());
         if (isCritical || Math.random() * 100 < WizardStats.BONK_STUN_CHANCE) enemy.setStunned(true);
@@ -61,7 +62,7 @@ public class Wizard extends Unit {
     }
 
     public void fireFireball() { //DMG 0-15 + DMG 999999999 (10%)
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance());
         double random = Math.random() * 100;
@@ -78,7 +79,7 @@ public class Wizard extends Unit {
     }
 
     public void arcaneTeleport() {  // ENEMY POS1: BACK(RANDOM)
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         double random = Math.random() * 100;
         if (random <= WizardStats.ARCANE_TELEPORT_BACK_1_RANDOM) {
             enemy.changePosition(enemy, -1 * WizardStats.ARCANE_TELEPORT_BACK_1_POSITION);
@@ -95,7 +96,7 @@ public class Wizard extends Unit {
     }
 
     public void witcherTreatment() {    // POS1: +0-10 HP + bleed 1(3)
-        Unit friend = instance.getUnit(1, isEnemy());
+        Unit friend = GameBoard.getInstance().getUnit(1, isEnemy());
 
         boolean isCritical = isCritical(getCriticalChance());
         int maxHeal = isCritical ? WizardStats.WITCHER_TREATMENT_MAX_HEAL_AMOUNT_CRIT : WizardStats.WITCHER_TREATMENT_MAX_HEAL_AMOUNT;

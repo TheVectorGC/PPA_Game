@@ -87,7 +87,7 @@ public class MainFX extends Application {
             savesDir.mkdirs();
         }
 
-        saveBtn.setOnAction(_ -> {
+        saveBtn.setOnAction(l -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Сохранить игру как...");
             chooser.getExtensionFilters().add(
@@ -104,7 +104,7 @@ public class MainFX extends Application {
             }
         });
 
-        loadBtn.setOnAction(_ -> {
+        loadBtn.setOnAction(l -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Выберите файл сохранения");
             chooser.getExtensionFilters().add(

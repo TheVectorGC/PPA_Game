@@ -10,8 +10,10 @@ import Unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public class GameBoard {
     private static GameBoard instance;
@@ -38,6 +40,17 @@ public class GameBoard {
         return instance;
     }
 
+    public int stateHash() {
+        return Objects.hash(
+                yourUnitIndex,
+                enemyUnitIndex,
+                isYourUnitTurn,
+                turnCounter,
+                yourUnits.stream().map(Unit::stateHash).collect(Collectors.toList()),
+                enemyUnits.stream().map(Unit::stateHash).collect(Collectors.toList())
+        );
+    }
+
     public interface TurnListener {
         void onBeforeAct(Unit actingUnit, boolean isYourTurn);
         void onAfterAct(Unit actedUnit, boolean isYourTurn);
@@ -53,9 +66,9 @@ public class GameBoard {
     }
 
     public void executeTurnWithSave() {
+        saveCurrentState();
         gameHistory.clearRedo();
         executeTurn();
-        saveCurrentState();
     }
 
     public void executeTurn() {
@@ -80,7 +93,16 @@ public class GameBoard {
             GameStateMemento memento = gameHistory.undo();
             if (memento != null) {
                 restoreState(memento);
-                GameLogger.addLogEntry("← ОТМЕНА ХОДА →");
+
+                int currentHash = stateHash();
+                if (currentHash == memento.expectedStateHash()) {
+                    GameLogger.addLogEntry("← ОТМЕНА ХОДА → (состояние корректно)");
+                }
+                else {
+                    GameLogger.addLogEntry("← ОТМЕНА ХОДА → (ОШИБКА: состояние не совпадает!)");
+                    GameLogger.addLogEntry("  Ожидаемый хэш: " + memento.expectedStateHash());
+                    GameLogger.addLogEntry("  Фактический хэш: " + currentHash);
+                }
             }
         }
     }
@@ -90,7 +112,16 @@ public class GameBoard {
             GameStateMemento memento = gameHistory.redo();
             if (memento != null) {
                 restoreState(memento);
-                GameLogger.addLogEntry("→ ПОВТОР ХОДА →");
+
+                int currentHash = stateHash();
+                if (currentHash == memento.expectedStateHash()) {
+                    GameLogger.addLogEntry("→ ПОВТОР ХОДА → (состояние корректно)");
+                }
+                else {
+                    GameLogger.addLogEntry("→ ПОВТОР ХОДА → (ОШИБКА: состояние не совпадает!)");
+                    GameLogger.addLogEntry("  Ожидаемый хэш: " + memento.expectedStateHash());
+                    GameLogger.addLogEntry("  Фактический хэш: " + currentHash);
+                }
             }
         }
     }
@@ -103,17 +134,9 @@ public class GameBoard {
         SaveLoadManager.loadGame(saveName);
     }
 
-    public static List<String> getAvailableSaves() {
-        return SaveLoadManager.getAvailableSaves();
-    }
-
-    public static void deleteSave(String saveName) {
-        SaveLoadManager.deleteSave(saveName);
-    }
-
     public void saveCurrentState() {
         GameStateMemento memento = new GameStateMemento(
-                yourUnits, enemyUnits, yourUnitIndex, enemyUnitIndex, isYourUnitTurn, turnCounter
+                yourUnits, enemyUnits, yourUnitIndex, enemyUnitIndex, isYourUnitTurn, turnCounter, stateHash()
         );
         gameHistory.saveState(memento);
     }
@@ -139,6 +162,7 @@ public class GameBoard {
             enemyUnitIndex = 0;
         }
     }
+
       public void game() {
         instance.setSquadPositions(true);
         instance.setSquadPositions(false);

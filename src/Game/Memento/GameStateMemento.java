@@ -10,16 +10,18 @@ public record GameStateMemento(
         int yourUnitIndex,
         int enemyUnitIndex,
         boolean isYourUnitTurn,
-        int turnCounter
+        int turnCounter,
+        int expectedStateHash
 ) {
     public GameStateMemento(List<Unit> yourUnits, List<Unit> enemyUnits, int yourUnitIndex,
-                            int enemyUnitIndex, boolean isYourUnitTurn, int turnCounter) {
+                            int enemyUnitIndex, boolean isYourUnitTurn, int turnCounter, int expectedStateHash) {
         this.yourUnits = copyUnits(yourUnits);
         this.enemyUnits = copyUnits(enemyUnits);
         this.yourUnitIndex = yourUnitIndex;
         this.enemyUnitIndex = enemyUnitIndex;
         this.isYourUnitTurn = isYourUnitTurn;
         this.turnCounter = turnCounter;
+        this.expectedStateHash = expectedStateHash;
     }
 
     private List<Unit> copyUnits(List<Unit> units) {

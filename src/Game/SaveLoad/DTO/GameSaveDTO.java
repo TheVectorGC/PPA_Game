@@ -9,5 +9,6 @@ public record GameSaveDTO(
         int yourUnitIndex,
         int enemyUnitIndex,
         boolean isYourUnitTurn,
-        int turnCounter
+        int turnCounter,
+        int expectedStateHash
 ) implements Serializable {}

@@ -1,6 +1,7 @@
 package Game.SaveLoad;
 
 import Game.GameBoard;
+import Game.GameLogger;
 import Game.SaveLoad.DTO.GameSaveDTO;
 import Game.SaveLoad.DTO.UnitDTO;
 import Unit.Unit;
@@ -26,7 +27,8 @@ public class GameStateMapper {
                 gameBoard.getYourUnitIndex(),
                 gameBoard.getEnemyUnitIndex(),
                 gameBoard.isYourUnitTurn(),
-                gameBoard.getTurnCounter()
+                gameBoard.getTurnCounter(),
+                gameBoard.stateHash()
         );
     }
 
@@ -49,6 +51,16 @@ public class GameStateMapper {
 
         gameBoard.setSquadPositions(true);
         gameBoard.setSquadPositions(false);
+
+        int currentHash = gameBoard.stateHash();
+        if (currentHash == dto.expectedStateHash()) {
+            GameLogger.addLogEntry("→ ЗАГРУЗКА → (состояние корректно)");
+        }
+        else {
+            GameLogger.addLogEntry("→ ЗАГРУЗКА → (ОШИБКА: состояние не совпадает!)");
+            GameLogger.addLogEntry("  Ожидаемый хэш: " + dto.expectedStateHash());
+            GameLogger.addLogEntry("  Фактический хэш: " + currentHash);
+        }
     }
 
     private static UnitDTO unitToDTO(Unit unit) {
@@ -89,7 +101,8 @@ public class GameStateMapper {
 
         if (dto.position() < 1) {
             return unitBuilder.build();
-        } else {
+        }
+        else {
             return unitBuilder.setPosition(dto.position()).build();
         }
     }

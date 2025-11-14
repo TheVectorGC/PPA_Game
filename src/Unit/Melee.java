@@ -2,6 +2,7 @@ package Unit;
 
 import Config.UnitStats.MeleeStats;
 import Exception.UnitPositionException;
+import Game.GameBoard;
 import Game.GameLogger;
 
 public class Melee extends Unit {
@@ -48,7 +49,7 @@ public class Melee extends Unit {
     }
 
     public void sneakyBlow() {  // DMG 4-5 + bleed 2(3)
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance());
         int damage = calculateDamage(
@@ -64,7 +65,7 @@ public class Melee extends Unit {
     }
 
     public void sneakyThrow() { // DMG 3-4 + bleed 1(3)
-        Unit enemy = instance.getUnit(1, !isEnemy());
+        Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
         boolean isCritical = isCritical(getCriticalChance());
         int damage = calculateDamage(
