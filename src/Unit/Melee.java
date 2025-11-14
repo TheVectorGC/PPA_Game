@@ -2,6 +2,9 @@ package Unit;
 
 import Config.UnitStats.MeleeStats;
 import Exception.UnitPositionException;
+import Game.Bridge.CriticalNosePicking;
+import Game.Bridge.NosePickingBridge;
+import Game.Bridge.StandardNosePicking;
 import Game.Command.MeleeSneakyBlowCommand;
 import Game.Command.UnitCommand;
 import Game.GameBoard;
@@ -39,8 +42,17 @@ public class Melee extends Unit {
                 knifeSharpening();
             }
             case 4 -> {
-                GameLogger.addLogEntry(String.format("%s (%d): КОВЫРЯНИЕ В НОСУ (nothing)\n", this.getName(), this.getPosition()));
-                nosePicking();
+                GameLogger.addLogEntry(String.format("%s (%d): КОВЫРЯНИЕ В НОСУ\n", this.getName(), this.getPosition()));
+
+                NosePickingBridge bridge;
+                if (isCritical(getCriticalChance())) {
+                    bridge = new NosePickingBridge(new CriticalNosePicking());
+                }
+                else {
+                    bridge = new NosePickingBridge(new StandardNosePicking());
+                }
+
+                bridge.performNosePicking(this);
             }
             default -> throw new UnitPositionException("Unit is not in one of the four positions");
         }
@@ -51,7 +63,6 @@ public class Melee extends Unit {
         return UnitType.UNIT_MELEE;
     }
 
-    // Нынешняя реализация через паттерн Command
     public void sneakyBlow() {  // DMG 4-5 + bleed 2(3)
         Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;

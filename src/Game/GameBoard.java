@@ -1,6 +1,6 @@
 package Game;
 
-import Game.Memento.GameHistory;
+import Game.SaveLoad.GameHistory;
 import Game.SaveLoad.DTO.GameSaveDTO;
 import Game.SaveLoad.GameStateMapper;
 import Game.SaveLoad.SaveLoadManager;

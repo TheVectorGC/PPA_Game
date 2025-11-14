@@ -75,6 +75,9 @@ public class GameUIController {
         DecoratedMelee decoratedEnemyMelee = new DecoratedMelee(true);
         gameBoard.addUnit(decoratedEnemyMelee, 2);
 
+        DecoratedMelee decoratedEnemyMelee2 = new DecoratedMelee(true);
+        DecoratedMelee decoratedMelee2 = new DecoratedMelee(false);
+
         GameLogger.addLogEntry("В армии добавлен УСИЛЕННЫЙ БЛИЖНИК с улучшенным броском (позиция 2)");
     }
 
