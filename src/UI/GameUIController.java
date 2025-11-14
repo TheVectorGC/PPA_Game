@@ -45,12 +45,10 @@ public class GameUIController {
     public void initializeDefaultArmy() {
         List<UnitType> unitList = new ArrayList<>();
         unitList.add(UnitType.UNIT_MELEE);
-        unitList.add(UnitType.UNIT_MELEE);
-        unitList.add(UnitType.UNIT_RANGE);
-        unitList.add(UnitType.UNIT_RANGE);
-        unitList.add(UnitType.UNIT_HEAVY);
-        unitList.add(UnitType.UNIT_HEAVY);
         unitList.add(UnitType.UNIT_WIZARD);
+        unitList.add(UnitType.UNIT_HEAVY);
+        unitList.add(UnitType.UNIT_RANGE);
+        unitList.add(UnitType.UNIT_RANGE);
         unitList.add(UnitType.UNIT_WIZARD);
 
         UnitInitializerFacade unitInitializerFacade = new UnitInitializerFacade();
