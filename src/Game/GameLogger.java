@@ -8,19 +8,28 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 
 public class GameLogger {
-    private static final ObservableList<String> logEntry = FXCollections.observableArrayList();
+    private static final ObservableList<String> logEntries = FXCollections.observableArrayList();
+    private static final int MAX_LOG_ENTRIES = 200;
     private GameLogger(){}
     public static ObservableList<String> getLogEntries() {
-        return logEntry;
+        return logEntries;
     }
 
     public static void addLogEntry(String entry) {
         if (Platform.isFxApplicationThread()) {
-            logEntry.add(entry);
+            addEntrySafely(entry);
         } else {
-            Platform.runLater(() -> logEntry.add(entry));
+            Platform.runLater(() -> addEntrySafely(entry));
         }
         System.out.println(entry);
+    }
+
+    private static void addEntrySafely(String entry) {
+        logEntries.add(entry);
+
+        if (logEntries.size() > MAX_LOG_ENTRIES) {
+            logEntries.remove(0, logEntries.size() - MAX_LOG_ENTRIES);
+        }
     }
 
     public static void logIsEnemyChange(Unit unit, boolean newValue) {

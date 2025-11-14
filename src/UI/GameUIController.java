@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
-
 public class GameUIController {
 
     private final GameBoard gameBoard = GameBoard.getInstance();
@@ -49,7 +48,6 @@ public class GameUIController {
         unitList.add(UnitType.UNIT_HEAVY);
         unitList.add(UnitType.UNIT_RANGE);
         unitList.add(UnitType.UNIT_RANGE);
-        unitList.add(UnitType.UNIT_WIZARD);
 
         UnitInitializerFacade unitInitializerFacade = new UnitInitializerFacade();
         unitInitializerFacade.initializeUnits(unitList, true);

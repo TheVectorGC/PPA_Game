@@ -14,12 +14,9 @@ public class UIDataProvider {
     private static final GameBoard gameBoard = GameBoard.getInstance();
     private final UnitImageProvider unitImageProvider;
 
-    public UIDataProvider(UnitImageProvider unitImageProvider) {
-        this.unitImageProvider = unitImageProvider;
-    }
-
     public UIDataProvider() {
-        this.unitImageProvider = new UnitImageProviderBaseImpl("resources/images/");
+        //this.unitImageProvider = new UnitImageProviderBaseImpl("resources/images/");
+        this.unitImageProvider = new UnitImageProviderProxy("resources/images/");
     }
 
     public Optional<Integer> getHiddenUnitsCount(boolean isEnemy) {

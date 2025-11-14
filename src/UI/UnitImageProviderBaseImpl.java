@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UnitImageProviderBaseImpl implements UnitImageProvider {
-
-    private final Map<UnitType, Map<String, Image>> imageCache = new HashMap<>();
     private final String imageBasePath;
 
     public UnitImageProviderBaseImpl(String imageBasePath) {
@@ -23,7 +21,7 @@ public class UnitImageProviderBaseImpl implements UnitImageProvider {
     @Override
     public Image getBaseImage(UnitType unitType) {
         final String key = "base";
-        return getImage(unitType, key);
+        return loadImage(unitType, key);
     }
 
     @Override
@@ -31,19 +29,7 @@ public class UnitImageProviderBaseImpl implements UnitImageProvider {
         UnitPositionException.throwIfInvalidPosition(position);
 
         final String key = "pos_" + position;
-        return getImage(unitType, key);
-    }
-
-    private Image getImage(UnitType unitType, String key) {
-        Map<String, Image> subMap = imageCache.computeIfAbsent(unitType, t -> new HashMap<>());
-
-        if (subMap.containsKey(key)) {
-            return subMap.get(key);
-        }
-
-        Image img = loadImage(unitType, key);
-        subMap.put(key, img);
-        return img;
+        return loadImage(unitType, key);
     }
 
     private Image loadImage(UnitType unitType, String key) {
@@ -58,3 +44,4 @@ public class UnitImageProviderBaseImpl implements UnitImageProvider {
         }
     }
 }
+

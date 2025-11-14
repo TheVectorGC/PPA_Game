@@ -2,6 +2,8 @@ package Unit;
 
 import Config.UnitStats.MeleeStats;
 import Exception.UnitPositionException;
+import Game.Command.MeleeSneakyBlowCommand;
+import Game.Command.UnitCommand;
 import Game.GameBoard;
 import Game.GameLogger;
 
@@ -25,7 +27,8 @@ public class Melee extends Unit {
         switch (getPosition()) {
             case 1 -> {
                 GameLogger.addLogEntry(String.format("%s (%d): ПОДЛЫЙ УДАР (DMG 4-5 +bleed 2(3))\n", this.getName(), this.getPosition()));
-                sneakyBlow();
+                UnitCommand command = new MeleeSneakyBlowCommand(this);
+                command.execute();
             }
             case 2 -> {
                 GameLogger.addLogEntry(String.format("%s (%d): КОВАРНЫЙ БРОСОК (DMG 3-4 +bleed 1(3))\n", this.getName(), this.getPosition()));
@@ -48,6 +51,7 @@ public class Melee extends Unit {
         return UnitType.UNIT_MELEE;
     }
 
+    // Нынешняя реализация через паттерн Command
     public void sneakyBlow() {  // DMG 4-5 + bleed 2(3)
         Unit enemy = GameBoard.getInstance().getUnit(1, !isEnemy());
         if (isEvade(enemy.getEvasion())) return;
